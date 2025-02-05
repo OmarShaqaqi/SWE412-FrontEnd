@@ -1,69 +1,93 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/templates/custom_scaffold.dart';
-import 'package:senior_project/templates/custom_body_group.dart';
+import 'package:senior_project/templates/transaction_body.dart';
 
-class TransactionPage extends StatelessWidget {
+class TransactionPage extends StatefulWidget {
   const TransactionPage({super.key});
+
+  @override
+  State<TransactionPage> createState() => _TransactionPageState();
+}
+
+class _TransactionPageState extends State<TransactionPage> {
+  String? _selectedFilter;
+
+  void _handleFilterChange(String? filterType) {
+    setState(() {
+      _selectedFilter = _selectedFilter == filterType ? null : filterType;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-        title: 'Transactions',
-        content: CustomBodyGroup(
+      title: 'Transactions',
+      content: CustomBodyGroup(
+        selectedFilter: _selectedFilter,
+        onFilterChanged: _handleFilterChange,
         content: SingleChildScrollView(
-        child: Column(
-        children: [
-        _buildTransactionSection(
-        title: 'April',
-        transactions: [
-        _TransactionItem(
-        title: 'Salary',
-        time: '18:27 - April 30',
-        category: 'Monthly',
-        amount: 4000.00,
-    ),
-                _TransactionItem(
-                  title: 'Groceries',
-                  time: '17:00 - April 24',
-                  category: 'Pantry',
-                  amount: -100.00,
-                ),
-                _TransactionItem(
-                  title: 'Rent',
-                  time: '8:30 - April 15',
-                  category: 'Rent',
-                  amount: -674.40,
-                ),
-                _TransactionItem(
-                  title: 'Transport',
-                  time: '9:30 - April 08',
-                  category: 'Fuel',
-                  amount: -4.13,
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            _buildTransactionSection(
-              title: 'March',
-              transactions: [
-                _TransactionItem(
-                  title: 'Food',
-                  time: '19:30 - March 31',
-                  category: 'Dinner',
-                  amount: -70.40,
-                ),
-              ],
-            ),
-          ],
+          child: Column(
+            children: [
+              _buildTransactionSection(
+                title: 'April 2024',
+                transactions: _filterTransactions([
+                  TransactionItem(
+                    date: DateTime(2024, 4, 30, 18, 27),
+                    category: Category.salary,
+                    group: 'Personal',
+                    amount: 4000.00,
+                  ),
+                  TransactionItem(
+                    date: DateTime(2024, 4, 24, 17, 0),
+                    category: Category.groceries,
+                    group: 'Family',
+                    amount: -100.00,
+                  ),
+                  TransactionItem(
+                    date: DateTime(2024, 4, 15, 8, 30),
+                    category: Category.rent,
+                    group: 'Shared',
+                    amount: -674.40,
+                  ),
+                  TransactionItem(
+                    date: DateTime(2024, 4, 8, 9, 30),
+                    category: Category.transport,
+                    group: 'Brothers',
+                    amount: -4.13,
+                  ),
+                ]),
+              ),
+              const SizedBox(height: 24),
+              _buildTransactionSection(
+                title: 'March 2024',
+                transactions: _filterTransactions([
+                  TransactionItem(
+                    date: DateTime(2024, 3, 31, 19, 30),
+                    category: Category.food,
+                    group: 'Personal',
+                    amount: -70.40,
+                  ),
+                ]),
+              ),
+            ],
+          ),
         ),
       ),
-    )
     );
+  }
+
+  List<TransactionItem> _filterTransactions(List<TransactionItem> transactions) {
+    if (_selectedFilter == 'income') {
+      return transactions.where((t) => t.amount > 0).toList();
+    } else if (_selectedFilter == 'expense') {
+      return transactions.where((t) => t.amount < 0).toList();
+    }
+    return transactions;
   }
 
   Widget _buildTransactionSection({
     required String title,
-    required List<_TransactionItem> transactions,
+    required List<TransactionItem> transactions,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,54 +119,67 @@ class TransactionPage extends StatelessWidget {
               final transaction = transactions[index];
               return ListTile(
                 contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+                  horizontal: 12,
+                  vertical: 8,
                 ),
-                leading: Image.asset(
-                  _getIconForCategory(transaction.category),
-                  width: 80,
-                  height: 80,
-                ),
-                title: Row(
-                  children: [
-                    Text(
-                      transaction.title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '|',
-                      style: TextStyle(
-                        color: Colors.grey.shade400,
-                        fontSize: 12,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      transaction.category,
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-                subtitle: Text(
-                  transaction.time,
-                  style: const TextStyle(color: Color.fromARGB(255, 0, 104, 255),fontWeight: FontWeight.bold),
-                ),
-                trailing: Text(
-                  '${transaction.amount < 0 ? '-' : ''}\$${transaction.amount.abs().toStringAsFixed(2)}',
-                  style: TextStyle(
-                    color: transaction.amount > 0
-                        ? const Color.fromARGB(255, 9, 48, 48)
-                        : const Color.fromARGB(255, 0, 104, 255),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                leading: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Image.asset(
+                    _getIconForCategory(transaction.category),
+                    width: 60,
+                    height: 60,
                   ),
+                ),
+                title: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text(
+                    transaction.category.displayName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text(
+                    _formatDate(transaction.date),
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 0, 104, 255),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          transaction.group,
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${transaction.amount < 0 ? '-' : ''} ${transaction.amount.abs().toStringAsFixed(2)} SAR',
+                          style: TextStyle(
+                            color: transaction.amount > 0
+                                ? const Color.fromARGB(255, 9, 48, 48)
+                                : const Color.fromARGB(255, 0, 104, 255),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 16),
+                  ],
                 ),
               );
             },
@@ -152,32 +189,75 @@ class TransactionPage extends StatelessWidget {
     );
   }
 
-  String _getIconForCategory(String category) {
-    switch (category.toLowerCase()) {
-      case 'monthly':
-        return 'assets/IconSalary.png';
-      case 'pantry':
-        return 'assets/IconGroceries.png';
-      case 'rent':
-        return 'assets/IconRent.png';
-      case 'fuel':
-        return 'assets/IconTransport.png';
+  String _formatDate(DateTime date) {
+    return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')} - ${_getMonthName(date.month)} ${date.day}';
+  }
+
+  String _getMonthName(int month) {
+    return [
+      'January', 'February', 'March', 'April',
+      'May', 'June', 'July', 'August',
+      'September', 'October', 'November', 'December'
+    ][month - 1];
+  }
+
+  String _getIconForCategory(Category category) {
+    switch (category) {
+      case Category.salary:
+        return 'assets/salary.png';
+      case Category.groceries:
+        return 'assets/groc.png';
+      case Category.rent:
+        return 'assets/rent.png';
+      case Category.transport:
+        return 'assets/transport.png';
+      case Category.food:
+        return 'assets/food.png';
+      case Category.travel:
+        return 'assets/travel.png';
+      case Category.medical:
+        return 'assets/med.png';
+      case Category.movie:
+        return 'assets/movie.png';
+      case Category.wedding:
+        return 'assets/wedding.png';
+      case Category.gift:
+        return 'assets/gift.png';
+      case Category.house:
+        return 'assets/house.png';
       default:
-        return 'assets/IconGroceries.png';
+        return 'assets/groc.png';
     }
   }
 }
 
-class _TransactionItem {
-  final String title;
-  final String time;
-  final String category;
+enum Category {
+  salary('Salary'),
+  groceries('Groceries'),
+  rent('Rent'),
+  transport('Transport'),
+  food('Food'),
+  travel('Travel'),
+  medical('Medical'),
+  movie('Movie'),
+  wedding('Wedding'),
+  gift('Gift'),
+  house('House');
+
+  final String displayName;
+  const Category(this.displayName);
+}
+
+class TransactionItem {
+  final DateTime date;
+  final Category category;
+  final String group;
   final double amount;
 
-  _TransactionItem({
-    required this.title,
-    required this.time,
+  TransactionItem({
+    required this.date,
     required this.category,
+    required this.group,
     required this.amount,
   });
 }

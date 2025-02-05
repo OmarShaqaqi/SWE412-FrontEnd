@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  intl: ^0.18.1
+  table_calendar: ^3.0.9
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -40,6 +42,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -71,11 +74,32 @@ flutter:
     - assets/anonymous_profile.png
     - assets/vector_animation.json
     - assets/FinWise.json
-    - assets/IconFood.png
-    - assets/IconGroceries.png
-    - assets/IconRent.png
-    - assets/IconSalary.png
-    - assets/Icontransport.png
+    - assets/car.png
+    - assets/car_pressed.png
+    - assets/food.png
+    - assets/food_pressed.png
+    - assets/gift.png
+    - assets/gift_pressed.png
+    - assets/groc.png
+    - assets/groc_pressed.png
+    - assets/house.png
+    - assets/house_pressed.png
+    - assets/med.png
+    - assets/med_pressed.png
+    - assets/movie.png
+    - assets/movie_pressed.png
+    - assets/rent.png
+    - assets/rent_pressed.png
+    - assets/salary.png
+    - assets/salary_pressed.png
+    - assets/transport.png
+    - assets/transport_pressed.png
+    - assets/travel.png
+    - assets/travel_pressed.png
+    - assets/wedding.png
+    - assets/wedding_pressed.png
+    - assets/calendar.png
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
