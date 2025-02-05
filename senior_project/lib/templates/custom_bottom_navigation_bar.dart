@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import "../screens/profile/profile.dart";
 import "../screens/groups/groups.dart";
+import "../screens/home/HomeScreen.dart";
+import "../screens/analyst/analysis.dart";
 
 class CustomBottomNavigationBar extends StatefulWidget {
   const CustomBottomNavigationBar({super.key});
@@ -16,8 +18,8 @@ class _CustomBottomNavigationBar extends State<CustomBottomNavigationBar> {
 
   // List of screens corresponding to each tab
   final List<Widget> _screens = [
-    const Text("Soon"),
-    const Text("Soon"),
+    const HomeScreen(),
+    const AnalysisPage(),
     const Text("Soon"),
     const GroupsScreen(),
     const ProfileScreen(),
