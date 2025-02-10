@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:senior_project/templates/custom_scaffold.dart';
+import 'package:senior_project/templates/cus_scaf_log.dart';
 import '../../widgets/password.dart';
 import "signup.dart";
 import "forgot_password.dart";

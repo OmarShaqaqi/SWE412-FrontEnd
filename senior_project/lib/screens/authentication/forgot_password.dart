@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:senior_project/screens/authentication/login.dart';
-import 'package:senior_project/templates/custom_scaffold.dart';
+import 'package:senior_project/templates/cus_scaf_log.dart';
 import "signup.dart";
 
 class ForgotPasswordScreen extends StatefulWidget {

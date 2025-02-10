@@ -49,12 +49,6 @@ class _TransactionPageState extends State<TransactionPage> {
                     group: 'Shared',
                     amount: -674.40,
                   ),
-                  TransactionItem(
-                    date: DateTime(2024, 4, 8, 9, 30),
-                    category: Category.transport,
-                    group: 'Brothers',
-                    amount: -4.13,
-                  ),
                 ]),
               ),
               const SizedBox(height: 24),
@@ -68,6 +62,7 @@ class _TransactionPageState extends State<TransactionPage> {
                     amount: -70.40,
                   ),
                 ]),
+
               ),
             ],
           ),

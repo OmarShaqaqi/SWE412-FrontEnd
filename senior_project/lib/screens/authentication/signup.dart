@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import "../../widgets/password.dart";
 import "login.dart";
-import "../../templates/custom_scaffold.dart";
+import 'package:senior_project/templates/cus_scaf_log.dart';
 
 class SignupScreen extends StatelessWidget {
   SignupScreen({super.key});

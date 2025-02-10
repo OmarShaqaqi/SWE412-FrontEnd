@@ -6,6 +6,7 @@ class CustomBodyGroup extends StatefulWidget {
   final String? selectedFilter;
   final Function(String?) onFilterChanged;
 
+
   const CustomBodyGroup({
     super.key,
     required this.content,
@@ -74,7 +75,7 @@ class _CustomBodyGroupState extends State<CustomBodyGroup> {
                               width: 117,
                               height: 36,
                               child: Text(
-                                "\$7,783.00",
+                                "${7783.00} SAR",
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 24,
@@ -91,21 +92,53 @@ class _CustomBodyGroupState extends State<CustomBodyGroup> {
                     const SizedBox(height: 20),
                     // Income & Expense Cards
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildMoneyCard(
-                          title: "Income",
-                          amount: "\$4,120.00",
-                          amountLeft: 41,
-                          isIncome: true,
-                          isSelected: widget.selectedFilter == 'income',
-                        ),
-                        _buildMoneyCard(
-                          title: "Expense",
-                          amount: "\$1,187.40",
-                          amountLeft: 38,
-                          isIncome: false,
-                          isSelected: widget.selectedFilter == 'expense',
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white, // Change this to match your design
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 6,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Expense",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 6.5),
+                                Text(
+                                  "${1187.40} SAR",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 0, 104, 255),
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  "38% left",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
