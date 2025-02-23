@@ -21,6 +21,7 @@ class _GroupItemScreenState extends State<GroupItemScreen> {
   @override
   Widget build(BuildContext context) {
     final content = PageView(
+      scrollDirection: Axis.vertical,
       controller: _pageController,
       onPageChanged: (index) {
         setState(() {

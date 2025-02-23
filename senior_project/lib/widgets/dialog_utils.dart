@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:senior_project/screens/authentication/login.dart';
 
 Future<void> showLogoutDialog(BuildContext context) {
   return showDialog(
@@ -36,6 +37,8 @@ Future<void> showLogoutDialog(BuildContext context) {
                   onPressed: () {
                     Navigator.of(context).pop(); // Close dialog
                     print("Session ended");
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+
                     // Add your logout logic here
                   },
                   style: ElevatedButton.styleFrom(

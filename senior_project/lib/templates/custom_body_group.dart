@@ -18,7 +18,7 @@ class CustomBodyGroup extends StatelessWidget {
             children: [
               // Total balance & total expenses
               Padding(
-                padding: const EdgeInsets.only(top: 30),
+                padding: const EdgeInsets.only(top: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -36,14 +36,14 @@ class CustomBodyGroup extends StatelessWidget {
                           "1000 SAR",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 20,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
                         )
                       ],
                     ),
                     Container(
-                      height: 50,
+                      height: 30,
                       width: 1,
                       color: Colors.white,
                     ),
@@ -61,7 +61,7 @@ class CustomBodyGroup extends StatelessWidget {
                           "1000 SAR",
                           style: TextStyle(
                             color: Colors.blue,
-                            fontSize: 20,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
                         )
@@ -71,7 +71,7 @@ class CustomBodyGroup extends StatelessWidget {
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               // Progress bar
               Row(
@@ -111,7 +111,7 @@ class CustomBodyGroup extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            margin: const EdgeInsets.only(top: 20),
+            margin: const EdgeInsets.only(top: 10),
             padding: const EdgeInsets.only(
                 top: 32, left: 16, right: 16, bottom: kBottomNavigationBarHeight),
             decoration: const BoxDecoration(

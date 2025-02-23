@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import "package:senior_project/screens/profile/password_settings.dart";
 import "package:senior_project/templates/custom_scaffold.dart";
+import "package:senior_project/templates/custom_scaffold_token.dart";
 import "../../templates/custom_bottom_navigation_bar.dart";
 import "../../templates/custom_body.dart";
 import "./delete_account.dart";
 
 class ProfileSettingsScreen extends StatelessWidget {
-  const ProfileSettingsScreen({super.key});
+  final String token;
+  const ProfileSettingsScreen({super.key, required this.token});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class ProfileSettingsScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const PasswordSettingsScreen()),
+                  builder: (context) => PasswordSettingsScreen(token: token,)),
             );
           },
         ),
@@ -75,17 +77,19 @@ class ProfileSettingsScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const DeleteAccountScreen()),
+                  builder: (context) =>  DeleteAccountScreen(token: token,)),
             );
           },
         ),
       ],
     );
 
-    return CustomScaffold(
+    return CustomScaffoldToken(
         title: "Settings",
         content: CustomBody(
           content: content,
-        ));
+        ),        
+        token: token,
+        );
   }
 }

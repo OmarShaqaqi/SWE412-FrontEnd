@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:senior_project/screens/home/HomeScreen.dart';
 import "../../widgets/password.dart";
 import "login.dart";
 import "../../templates/custom_scaffold.dart";
 import 'package:http/http.dart' as http;
+import 'dart:async';
 class SignupScreen extends StatefulWidget {
   @override
   _SignupScreenState createState() => _SignupScreenState();
@@ -22,225 +24,346 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
-void handleSignup() async {
-  if (_formKey.currentState!.validate()) {
+// void handleSignup() async {
+//   if (_formKey.currentState!.validate()) {
+//     final response = await http.post(
+//       Uri.parse("http://127.0.0.1:8080/signup/"),
+//       headers: {"Content-Type": "application/json"},
+//       body: jsonEncode({
+//         "phone": mobileController.text.trim(),
+//         "email": emailController.text.trim(),
+//         "password": passwordController.text.trim(),
+//         "username": lastNameController.text.trim(),
+//         "fname": firstNameController.text.trim(),
+//         "lname": lastNameController.text.trim(),
+//       }),
+//     );
+
+//     if (response.statusCode == 200) {
+//       print("Signup successful: ${response.body}");
+//       Navigator.pop(context);
+//                             Navigator.push(
+//                               context,
+//                               MaterialPageRoute(
+//                                 builder: (context) => const HomeScreen(),
+//                               ),
+//                             );
+//     } else {
+//       print("Signup failed: ${response.body}");
+//     }
+//   }
+// }
+
+//   
+
+//second try
+// void handleSignup() async {
+//   if (_formKey.currentState!.validate()) {
+//     showDialog(
+//       context: context,
+//       barrierDismissible: false,
+//       builder: (context) => Center(child: CircularProgressIndicator()),
+//     );
+
+//     try {
+//       final response = await http.post(
+//         Uri.parse("http://0.0.0.0:8080/signup/"),
+//         headers: {"Content-Type": "application/json"},
+//         body: jsonEncode({
+//           "phone": mobileController.text.trim(),
+//           "email": emailController.text.trim(),
+//           "password": passwordController.text.trim(),
+//           "username": userNameController.text.trim(),
+//           "fname": firstNameController.text.trim(),
+//           "lname": lastNameController.text.trim(),
+//         }),
+//       );
+
+//       Navigator.pop(context); // Close loading dialog
+
+//       if (response.statusCode == 200) {
+//         print("Signup successful: ${response.body}");
+//         Navigator.pushReplacement(
+//           context,
+//           MaterialPageRoute(builder: (context) => HomeScreen()),
+//         );
+//       } else {
+//         print("Signup failed: ${response.body}");
+//         showDialog(
+//           context: context,
+//           builder: (context) => AlertDialog(
+//             title: Text("Signup Failed"),
+//             content: Text(response.body),
+//             actions: [
+//               TextButton(
+//                 onPressed: () => Navigator.pop(context),
+//                 child: Text("OK"),
+//               ),
+//             ],
+//           ),
+//         );
+//       }
+//     } catch (e) {
+//       Navigator.pop(context); // Close loading dialog
+//       print("Error: $e");
+
+//       showDialog(
+//         context: context,
+//         builder: (context) => AlertDialog(
+//           title: Text("Network Error"),
+//           content: Text("Could not connect to the server."),
+//           actions: [
+//             TextButton(
+//               onPressed: () => Navigator.pop(context),
+//               child: Text("OK"),
+//             ),
+//           ],
+//         ),
+//       );
+//     }
+//   }
+// }
+
+bool isLoading = false;
+String? responseMessage;
+
+Future<void> registerUser() async {
+    if (!_formKey.currentState!.validate()) return;
+ 
+    setState(() {
+      isLoading = true;
+      responseMessage = null;
+    });
+ 
+    final url = Uri.parse("http://10.0.2.2:8080/signup"); // Change this to your backend URL
+ 
     final response = await http.post(
-      Uri.parse("http://127.0.0.1:8080/signup/"),
+      url,
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
-        "phone": mobileController.text.trim(),
-        "email": emailController.text.trim(),
-        "password": passwordController.text.trim(),
-        "username": lastNameController.text.trim(),
-        "fname": firstNameController.text.trim(),
-        "lname": lastNameController.text.trim(),
+        "phone": mobileController.text,
+        "email": emailController.text,
+        "password": passwordController.text,
+        "username": userNameController.text,
+        "fname": firstNameController.text,
+        "lname": lastNameController.text,
       }),
     );
-
-    if (response.statusCode == 200) {
-      print("Signup successful: ${response.body}");
-    } else {
-      print("Signup failed: ${response.body}");
-    }
+ 
+    setState(() {
+      isLoading = false;
+      if (response.statusCode == 200) {
+        responseMessage = "Signup successful!";
+            Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
+      } else {
+        responseMessage = "Signup failed: ${jsonDecode(response.body)['message']}";
+      }
+    });
   }
-}
+ 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text("Username"),
-              TextFormField(
-                controller: userNameController, // Attach controller
-                decoration: const InputDecoration(
-                  hintText: "Username",
-                  filled: true,
-                  fillColor: Color.fromARGB(255, 223, 247, 226),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(18.0),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          padding: EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("Username"),
+                TextFormField(
+                  controller: userNameController, // Attach controller
+                  decoration: const InputDecoration(
+                    hintText: "Username",
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 223, 247, 226),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(18.0),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your first name";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+        
+                const Text("First Name"),
+                TextFormField(
+                  controller: firstNameController, // Attach controller
+                  decoration: const InputDecoration(
+                    hintText: "First name",
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 223, 247, 226),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(18.0),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your first name";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                
+                const Text("Last Name"),
+                TextFormField(
+                  controller: lastNameController,
+                  decoration: const InputDecoration(
+                    hintText: "Last name",
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 223, 247, 226),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(18.0),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your last name";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+        
+                const Text("Email"),
+                TextFormField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    hintText: "example@example.com",
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 223, 247, 226),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(18.0),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your email";
+                    } else if (!value.contains("@")) {
+                      return "Please enter a valid email";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+        
+                const Text("Mobile Number"),
+                TextFormField(
+                  controller: mobileController,
+                  decoration: const InputDecoration(
+                    hintText: "+966 50 456 7890",
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 223, 247, 226),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(18.0),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your mobile number";
+                    }
+                    final regExp = RegExp(
+                        r'^(009665|9665|\+9665|05)(5|0|3|6|4|9|1|8|7)[0-9]{7}$');
+        
+                    if (!regExp.hasMatch(value)) {
+                      return "Please enter a valid mobile number";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+        
+                const Text("Password"),
+                TextFormField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    hintText: "Enter password",
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 223, 247, 226),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(18.0),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a password";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+        
+                const Text("Confirm Password"),
+                TextFormField(
+                  controller: confirmPasswordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    hintText: "Confirm password",
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 223, 247, 226),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(18.0),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please confirm your password";
+                    } else if (value != passwordController.text) {
+                      return "Passwords do not match";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+        
+                Center(
+                  child: ElevatedButton(
+                    onPressed: registerUser,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 0, 208, 158),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 80),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                    ),
+                    child: const Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 9, 48, 48),
+                      ),
                     ),
                   ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your first name";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-
-              const Text("First Name"),
-              TextFormField(
-                controller: firstNameController, // Attach controller
-                decoration: const InputDecoration(
-                  hintText: "First name",
-                  filled: true,
-                  fillColor: Color.fromARGB(255, 223, 247, 226),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(18.0),
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your first name";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              
-              const Text("Last Name"),
-              TextFormField(
-                controller: lastNameController,
-                decoration: const InputDecoration(
-                  hintText: "Last name",
-                  filled: true,
-                  fillColor: Color.fromARGB(255, 223, 247, 226),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(18.0),
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your last name";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-
-              const Text("Email"),
-              TextFormField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  hintText: "example@example.com",
-                  filled: true,
-                  fillColor: Color.fromARGB(255, 223, 247, 226),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(18.0),
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your email";
-                  } else if (!value.contains("@")) {
-                    return "Please enter a valid email";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-
-              const Text("Mobile Number"),
-              TextFormField(
-                controller: mobileController,
-                decoration: const InputDecoration(
-                  hintText: "+966 50 456 7890",
-                  filled: true,
-                  fillColor: Color.fromARGB(255, 223, 247, 226),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(18.0),
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your mobile number";
-                  }
-                  final regExp = RegExp(
-                      r'^(009665|9665|\+9665|05)(5|0|3|6|4|9|1|8|7)[0-9]{7}$');
-      
-                  if (!regExp.hasMatch(value)) {
-                    return "Please enter a valid mobile number";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-
-              const Text("Password"),
-              TextFormField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  hintText: "Enter password",
-                  filled: true,
-                  fillColor: Color.fromARGB(255, 223, 247, 226),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(18.0),
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter a password";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-
-              const Text("Confirm Password"),
-              TextFormField(
-                controller: confirmPasswordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  hintText: "Confirm password",
-                  filled: true,
-                  fillColor: Color.fromARGB(255, 223, 247, 226),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(18.0),
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please confirm your password";
-                  } else if (value != passwordController.text) {
-                    return "Passwords do not match";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-
-              Center(
-                child: ElevatedButton(
-                  onPressed: handleSignup,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 0, 208, 158),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 80),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                  ),
-                  child: const Text(
-                    "Sign Up",
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 9, 48, 48),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

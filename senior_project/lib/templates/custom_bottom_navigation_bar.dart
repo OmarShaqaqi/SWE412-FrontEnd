@@ -22,7 +22,7 @@ class _CustomBottomNavigationBar extends State<CustomBottomNavigationBar> {
     const AnalysisPage(),
     const Text("Soon"),
     const GroupsScreen(),
-    const ProfileScreen(),
+    ProfileScreen(token: 'your_token_here'),    
   ];
 
   // Function to navigate to the selected screen

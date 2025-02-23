@@ -1,18 +1,66 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
+import 'package:senior_project/groups_provider.dart'; // Ensure correct import
+import 'package:senior_project/token_provider.dart';
 import "./dialog_utils.dart";
 
-class ParticipantsList extends StatefulWidget {
+class ParticipantsList extends ConsumerStatefulWidget {
   @override
-  State<StatefulWidget> createState() => _ParticipantsListState();
+  _ParticipantsListState createState() => _ParticipantsListState();
 }
 
-class _ParticipantsListState extends State<ParticipantsList> {
-  List<String> participants = ["Group Leader", "Participant 1"];
+class _ParticipantsListState extends ConsumerState<ParticipantsList> {
+  List<String> participants = [];
 
-  void addParticipant() {
-    setState(() {
-      participants.add("Participant ${participants.length + 1}");
-    });
+  // ✅ Function to add a participant via API request
+  Future<void> addParticipant() async {
+    final groupId = ref.read(selectedGroupIdProvider); // ✅ Get selected groupId
+    final token = ref.read(tokenProvider); // ✅ Get user token
+
+    if (groupId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error: No group selected")),
+      );
+      return;
+    }
+
+    final participant = await addParticipantDialog(context);
+    if (participant == null) return; // If user cancels dialog, do nothing
+
+    try {
+      final response = await http.post(
+        Uri.parse("http://10.0.2.2:8080/participants/add"), // Replace with actual API endpoint
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "group_id": groupId, // ✅ Send the selected group ID
+          "username": participant, // ✅ Send the entered username
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          participants.add(participant); // ✅ Add participant locally
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("$participant added successfully!")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to add participant: ${response.body}")),
+        );
+      }
+    } catch (e) {
+      print("Exception: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("An error occurred while adding participant")),
+      );
+    }
   }
 
   void removeParticipant(int index) {
@@ -26,27 +74,20 @@ class _ParticipantsListState extends State<ParticipantsList> {
     return Container(
       height: 300,
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 191, 225, 195),
+        color: const Color.fromARGB(255, 191, 225, 195),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 223, 247, 226),
+              color: const Color.fromARGB(255, 223, 247, 226),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
-                onTap: () async {
-                  final participant = await addParticipantDialog(context);
-                  if (participant != null) {
-                    setState(() {
-                      participants.add(participant);
-                    });
-                  }
-                },
+                onTap: addParticipant, // ✅ Call addParticipant function
                 child: const Row(
                   children: [
                     Expanded(
@@ -70,10 +111,10 @@ class _ParticipantsListState extends State<ParticipantsList> {
               itemCount: participants.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  leading: Icon(Icons.person, color: Colors.blue),
+                  leading: const Icon(Icons.person, color: Colors.blue),
                   title: Text(participants[index] ?? ""),
                   trailing: IconButton(
-                    icon: Icon(Icons.remove, color: Colors.red),
+                    icon: const Icon(Icons.remove, color: Colors.red),
                     onPressed: () => removeParticipant(index),
                   ),
                 );

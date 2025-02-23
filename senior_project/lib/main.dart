@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:senior_project/data/groups_data.dart";
 import "package:senior_project/screens/groups/category_item.dart";
 import "package:senior_project/screens/groups/group_item.dart";
@@ -16,7 +17,7 @@ import "screens/groups/groups.dart";
 import "screens/groups/add_group.dart";
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child:MyApp()));
 }
 
 class MyApp extends StatelessWidget {
