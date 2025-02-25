@@ -19,7 +19,7 @@ class _CustomBottomNavigationBar extends State<CustomBottomNavigationBar> {
   // List of screens corresponding to each tab
   final List<Widget> _screens = [
     const HomeScreen(),
-    const AnalysisPage(),
+    // const AnalysisPage(),
     const Text("Soon"),
     const GroupsScreen(),
     ProfileScreen(token: 'your_token_here'),    

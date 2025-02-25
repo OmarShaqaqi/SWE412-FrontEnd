@@ -1,10 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:senior_project/token_provider.dart';
+import 'package:senior_project/Providers/token_provider.dart';
 import 'package:senior_project/screens/profile/profile.dart';
 import 'package:senior_project/templates/custom_body.dart';
-import 'package:senior_project/token_provider.dart';
+import 'package:senior_project/Providers/token_provider.dart';
 import '../../templates/custom_appbar.dart';
 import "signup.dart";
 import "forgot_password.dart";

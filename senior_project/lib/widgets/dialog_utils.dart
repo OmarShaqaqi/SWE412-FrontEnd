@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:senior_project/Providers/groups_provider.dart';
 import 'package:senior_project/screens/authentication/login.dart';
+import "../Providers/categories_provider.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 Future<void> showLogoutDialog(BuildContext context) {
   return showDialog(
@@ -577,12 +583,13 @@ Future<void> addExpenseDialog(
   BuildContext context,
   DateTime selectedDate,
   void Function(DateTime) onDateSelected,
+  String? jwtToken,
+  int groupId,
+  List<String> categories,
 ) async {
-  // Controllers for the input fields
   final TextEditingController amountController = TextEditingController();
-  final TextEditingController expenseTitleController = TextEditingController();
-  final TextEditingController messageController = TextEditingController();
-  String selectedCategory = "";
+  final TextEditingController descriptionController = TextEditingController();
+  String selectedCategory = categories.isNotEmpty ? categories[0] : "";
 
   await showDialog(
     context: context,
@@ -592,13 +599,12 @@ Future<void> addExpenseDialog(
           return AlertDialog(
             backgroundColor: Colors.white,
             contentPadding: const EdgeInsets.all(16.0),
-            content: SingleChildScrollView(
+            content: SingleChildScrollView( // ✅ Fix responsiveness
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text("Date"),
-                  // Date Picker
                   GestureDetector(
                     onTap: () async {
                       final DateTime? picked = await showDatePicker(
@@ -609,9 +615,9 @@ Future<void> addExpenseDialog(
                       );
                       if (picked != null) {
                         setState(() {
-                          selectedDate = picked; // Update local state
+                          selectedDate = picked;
                         });
-                        onDateSelected(picked); // Notify the parent widget
+                        onDateSelected(picked);
                       }
                     },
                     child: Container(
@@ -622,30 +628,25 @@ Future<void> addExpenseDialog(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black),
                         color: const Color.fromARGB(255, 223, 247, 226),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(18.0),
-                        ),
+                        borderRadius: const BorderRadius.all(Radius.circular(18.0)),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            selectedDate.toLocal().toString().split(' ')[0],
+                            "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}", // ✅ Correct date format
                             style: const TextStyle(fontSize: 16),
                           ),
-                          const Icon(
-                            Icons.calendar_today,
-                            color: Colors.black,
-                          ),
+                          const Icon(Icons.calendar_today, color: Colors.black),
                         ],
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
+
                   const Text("Category"),
-                  // Category Dropdown
                   DropdownButtonFormField<String>(
-                    value: selectedCategory.isNotEmpty ? selectedCategory : null,
+                    value: selectedCategory,
                     onChanged: (String? value) {
                       if (value != null) {
                         setState(() {
@@ -653,26 +654,29 @@ Future<void> addExpenseDialog(
                         });
                       }
                     },
-                    items: ["Food", "Transport", "Shopping", "Other"]
-                        .map((category) => DropdownMenuItem(
+                    items: categories.isNotEmpty
+                        ? categories.map((category) => DropdownMenuItem(
                               value: category,
                               child: Text(category),
-                            ))
-                        .toList(),
+                            )).toList()
+                        : [
+                            const DropdownMenuItem(
+                              value: null,
+                              child: Text("No categories available"),
+                            ),
+                          ],
                     decoration: const InputDecoration(
                       hintText: "Select The Category",
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
+
                   const Text("Amount"),
-                  // Amount Field
                   TextFormField(
                     controller: amountController,
                     keyboardType: TextInputType.number,
@@ -682,57 +686,94 @@ Future<void> addExpenseDialog(
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text("Expense Title"),
-                  // Expense Title Field
-                  TextFormField(
-                    controller: expenseTitleController,
-                    decoration: const InputDecoration(
-                      hintText: "Expense Title",
-                      labelText: "Expense Title",
-                      filled: true,
-                      fillColor: Color.fromARGB(255, 223, 247, 226),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+
                   const Text("Details"),
-                  // Optional Message Field
                   TextFormField(
-                    controller: messageController,
+                    controller: descriptionController,
                     maxLines: 3,
                     decoration: const InputDecoration(
                       hintText: "Enter Details",
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Container(
-                    alignment: Alignment.center,
+
+                  Center(
                     child: Column(
                       children: [
                         SizedBox(
                           width: 100,
                           child: ElevatedButton(
-                            onPressed: () {
-                              // Perform actions to save the expense
-                              Navigator.of(context).pop();
+                            onPressed: () async {
+                              // ✅ Validate inputs
+                              if (selectedCategory.isEmpty ||
+                                  amountController.text.isEmpty ||
+                                  descriptionController.text.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Please fill all required fields"),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              // ✅ Convert amount to BigDecimal format
+                              final double? amount = double.tryParse(amountController.text);
+                              if (amount == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Invalid amount"),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              // ✅ Prepare JSON payload
+                              final Map<String, dynamic> expenseData = {
+                                "groupId": groupId,
+                                "categoryName": selectedCategory,
+                                "amount": amount, // Backend expects BigDecimal (float in JSON)
+                                "description": descriptionController.text,
+                                "date": "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}", // ✅ Fixed Date Format
+                              };
+
+                              // ✅ Send API request to backend
+                              final response = await http.post(
+                                Uri.parse('http://10.0.2.2:8080/expenses/add'),
+                                headers: {
+                                  'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer $jwtToken',
+                                },
+                                body: jsonEncode(expenseData),
+                              );
+
+                              if (response.statusCode == 200) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Expense added successfully"),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                                Navigator.of(context).pop(); // ✅ Close dialog on success
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Failed to add expense: ${response.body}"),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color.fromARGB(255, 0, 208, 158),
@@ -740,8 +781,7 @@ Future<void> addExpenseDialog(
                                 borderRadius: BorderRadius.circular(25.0),
                               ),
                             ),
-                            child: const Text("Save",
-                                style: TextStyle(color: Colors.black)),
+                            child: const Text("Save", style: TextStyle(color: Colors.black)),
                           ),
                         ),
                         SizedBox(
@@ -756,8 +796,7 @@ Future<void> addExpenseDialog(
                                 borderRadius: BorderRadius.circular(25.0),
                               ),
                             ),
-                            child: const Text("Cancel",
-                                style: TextStyle(color: Colors.black)),
+                            child: const Text("Cancel", style: TextStyle(color: Colors.black)),
                           ),
                         ),
                       ],
@@ -773,7 +812,12 @@ Future<void> addExpenseDialog(
   );
 }
 
-Future<void> addCategory(BuildContext context) {
+
+
+
+Future<void> addCategory(BuildContext context, WidgetRef ref) {
+   final TextEditingController _categoryController = TextEditingController();
+
   return showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -793,7 +837,8 @@ Future<void> addCategory(BuildContext context) {
               mainAxisAlignment: MainAxisAlignment
                   .spaceEvenly, // Dynamically adapts to content height
               children: [
-                const TextField(
+                 TextField(
+                  controller: _categoryController,
                   decoration: InputDecoration(
                     hintText: "Category name",
                     filled: true,
@@ -807,8 +852,22 @@ Future<void> addCategory(BuildContext context) {
                 ),
                 const SizedBox(height: 30),
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
+                  onPressed: () async {
+                    String categoryName = _categoryController.text.trim();
+
+                    if (categoryName.isNotEmpty) {
+                      try {
+                        await ref.read(categoriesProvider.notifier).addCategory(categoryName);
+                        // Optionally, show a success message here.
+                        Navigator.of(context).pop(); // Close the dialog
+                      } catch (e) {
+                        // Handle the error (e.g., show an error message)
+                        print('Error adding category: $e');
+                      }
+                    } else {
+                      // Show a message to inform the user to enter a category name
+                      print('Category name cannot be empty');
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 0, 208, 158),

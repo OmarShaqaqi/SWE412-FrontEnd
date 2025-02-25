@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:senior_project/groups_provider.dart";
+import "package:senior_project/Providers/groups_provider.dart";
+import "package:senior_project/Providers/users_provider.dart";
 import "package:senior_project/templates/custom_body_group.dart";
 import "package:senior_project/templates/custom_scaffold.dart";
 import "group_item.dart";
@@ -60,7 +61,11 @@ class GroupsScreen extends ConsumerWidget {
               );
             } else {
               return GestureDetector(
-                onTap: () {
+                onTap: () async{
+                  ref.read(selectedGroupIdProvider.notifier).state = groups[index].id;
+                  String groupId = groups[index].id.toString();
+                  // Call loadUserRole to load the user's role in the group
+                  await ref.read(userRoleProvider.notifier).loadUserRole(groupId);
                   Navigator.push(
                     context,
                     MaterialPageRoute(

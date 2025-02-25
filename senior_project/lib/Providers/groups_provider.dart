@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../data/group_model.dart';
-import '../token_provider.dart';
+import '../models/group_model.dart';
+import 'token_provider.dart';
 
 class GroupsNotifier extends StateNotifier<List<Group>> {
   final Ref ref;

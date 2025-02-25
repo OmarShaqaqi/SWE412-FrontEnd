@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:senior_project/Providers/categories_provider.dart';
+import 'package:senior_project/Providers/groups_provider.dart';
 import 'package:senior_project/templates/custom_body_group.dart';
 import 'package:senior_project/templates/custom_scaffold.dart';
+import 'package:senior_project/Providers/token_provider.dart';
 import 'package:senior_project/widgets/groups/specific_category_expense_row.dart';
 import "../../widgets/dialog_utils.dart";
 
-class CategoryItemScreen extends StatefulWidget {
+class CategoryItemScreen extends ConsumerStatefulWidget {
   const CategoryItemScreen({super.key, required this.title});
 
   final String title;
 
   @override
-  State<StatefulWidget> createState() => _CategoryItemState();
+  ConsumerState<CategoryItemScreen> createState() => _CategoryItemState();
 }
 
-class _CategoryItemState extends State<CategoryItemScreen> {
+class _CategoryItemState extends ConsumerState<CategoryItemScreen> {
   DateTime _selectedDate = DateTime.now();
 
   void _updateSelectedDate(DateTime newDate) {
@@ -24,6 +28,10 @@ class _CategoryItemState extends State<CategoryItemScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final token = ref.read(tokenProvider);
+    final groupId = ref.read(selectedGroupIdProvider);
+    final categoriesState = ref.watch(categoriesProvider);
+    final List<String> categories = categoriesState.map((c) => c.categoryName).toList();
     final content = Column(
       children: [
         Expanded(
@@ -46,7 +54,7 @@ class _CategoryItemState extends State<CategoryItemScreen> {
             height: 30, // Set the height of the button
             child: ElevatedButton(
               onPressed: () {
-                addExpenseDialog(context, _selectedDate, _updateSelectedDate);
+                addExpenseDialog(context, _selectedDate, _updateSelectedDate,token,groupId!,categories);
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black, // Check this!

@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:senior_project/groups_provider.dart';
+import 'package:senior_project/Providers/groups_provider.dart';
 import 'package:senior_project/screens/groups/add_participant.dart';
-import 'package:senior_project/token_provider.dart';
+import 'package:senior_project/Providers/token_provider.dart';
 import "package:senior_project/templates/custom_body.dart";
 import "package:senior_project/templates/custom_scaffold.dart";
 import "../../widgets/participants_list.dart";

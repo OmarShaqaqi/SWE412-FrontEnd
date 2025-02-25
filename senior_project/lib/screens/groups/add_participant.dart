@@ -28,7 +28,7 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:senior_project/groups_provider.dart'; // Ensure correct import
+import 'package:senior_project/Providers/groups_provider.dart'; // Ensure correct import
 import "package:senior_project/templates/custom_body.dart";
 import "package:senior_project/templates/custom_scaffold.dart";
 import "../../widgets/participants_list.dart";

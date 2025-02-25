@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:senior_project/Providers/users_provider.dart';
 import 'package:senior_project/templates/custom_body_group.dart';
 import 'package:senior_project/templates/custom_scaffold.dart';
+import 'package:senior_project/widgets/groups/expenses_list.dart';
+import 'package:senior_project/widgets/groups/categories_list.dart';
 import 'package:senior_project/widgets/groups/expenses_list.dart';
 import '../../widgets/groups/members_list.dart';
 import '../../widgets/groups/categories_list.dart';
 
-class GroupItemScreen extends StatefulWidget {
+class GroupItemScreen extends ConsumerStatefulWidget {
   const GroupItemScreen({super.key, required this.name});
 
   final String name;
 
   @override
-  State<GroupItemScreen> createState() => _GroupItemScreenState();
+  ConsumerState<GroupItemScreen> createState() => _GroupItemScreenState();
 }
 
-class _GroupItemScreenState extends State<GroupItemScreen> {
+class _GroupItemScreenState extends ConsumerState<GroupItemScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
+    final bool isLeader = ref.watch(userRoleProvider);
     final content = PageView(
-      scrollDirection: Axis.vertical,
+      scrollDirection: Axis.horizontal,
       controller: _pageController,
       onPageChanged: (index) {
         setState(() {
