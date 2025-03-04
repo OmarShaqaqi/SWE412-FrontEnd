@@ -45,26 +45,26 @@ class _CalendarDialogState extends State<CalendarDialog> {
                     _focusedDay = focusedDay;
                   });
                 },
-                headerStyle: HeaderStyle(
+                headerStyle: const HeaderStyle(
                   formatButtonVisible: false,
                   titleCentered: true,
-                  titleTextStyle: const TextStyle(
+                  titleTextStyle: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
-                  leftChevronPadding: const EdgeInsets.only(left: 8),
-                  rightChevronPadding: const EdgeInsets.only(right: 8),
+                  leftChevronPadding: EdgeInsets.only(left: 8),
+                  rightChevronPadding: EdgeInsets.only(right: 8),
                 ),
                 calendarStyle: CalendarStyle(
                   outsideDaysVisible: false,
                   weekendTextStyle: TextStyle(color: Colors.grey[600]),
-                  todayDecoration: BoxDecoration(
-                    color: const Color(0xFF00D09E),
+                  todayDecoration: const BoxDecoration(
+                    color: Color(0xFF00D09E),
                     shape: BoxShape.circle,
                   ),
-                  selectedDecoration: BoxDecoration(
-                    color: const Color(0xFF0068FF),
+                  selectedDecoration: const BoxDecoration(
+                    color: Color(0xFF0068FF),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -80,7 +80,7 @@ class _CalendarDialogState extends State<CalendarDialog> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF0068FF),
-                      foregroundColor: Colors.white, // White text
+                      foregroundColor: Colors.white,
                     ),
                     onPressed: () {
                       Navigator.pop(
@@ -92,7 +92,7 @@ class _CalendarDialogState extends State<CalendarDialog> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF0068FF),
-                      foregroundColor: Colors.white, // White text
+                      foregroundColor: Colors.white,
                     ),
                     onPressed: () {
                       if (_selectedDate != null) {
