@@ -73,7 +73,7 @@ flutter:
     - assets/Profile.png
     - assets/anonymous_profile.png
     - assets/vector_animation.json
-    - assets/FinWise.json
+    - assets/vector_green.png
     - assets/car.png
     - assets/car_pressed.png
     - assets/food.png
@@ -99,6 +99,7 @@ flutter:
     - assets/wedding.png
     - assets/wedding_pressed.png
     - assets/calendar.png
+    - assets/Saudi_Riyal_Symbol.png
 
 
 

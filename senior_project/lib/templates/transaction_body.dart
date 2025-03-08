@@ -53,14 +53,24 @@ class CustomBodyGroup extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  Text(
-                    '${totalExpenses.toStringAsFixed(2)} SAR',
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w800,
-                      fontSize: 30, // Larger font size
-                      color: Color(0xFF0068FF),
-                    ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        'assets/Saudi_Riyal_Symbol.png',
+                        height: 20, // Adjust size as needed
+                      ),
+                      const SizedBox(width: 5), // Space between image and text
+                      Text(
+                        '${totalExpenses.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w800,
+                          fontSize: 30, // Larger font size
+                          color: Color(0xFF0068FF),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

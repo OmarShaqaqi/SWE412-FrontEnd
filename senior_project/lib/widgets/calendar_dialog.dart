@@ -89,18 +89,7 @@ class _CalendarDialogState extends State<CalendarDialog> {
                     },
                     child: const Text('Select Month/Year'),
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0068FF),
-                      foregroundColor: Colors.white,
-                    ),
-                    onPressed: () {
-                      if (_selectedDate != null) {
-                        Navigator.pop(context, _selectedDate);
-                      }
-                    },
-                    child: const Text('Select Day'),
-                  ),
+
                 ],
               ),
             ),

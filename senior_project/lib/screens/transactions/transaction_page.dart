@@ -210,16 +210,25 @@ class _TransactionPageState extends State<TransactionPage> {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          '${transaction.amount < 0 ? '-' : ''} ${transaction.amount.abs().toStringAsFixed(2)} SAR',
-                          style: TextStyle(
-                            color: transaction.amount > 0
-                                ? const Color.fromARGB(255, 9, 48, 48)
-                                : const Color.fromARGB(255, 0, 104, 255),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset(
+                              'assets/Saudi_Riyal_Symbol.png',
+                              height: 16, // Adjust size as needed
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              '- ${transaction.amount.abs().toStringAsFixed(2)}',
+                              style: TextStyle(
+                                color: const Color.fromARGB(255, 0, 104, 255),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
+
                       ],
                     ),
                     const SizedBox(width: 16),
