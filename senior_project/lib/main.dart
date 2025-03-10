@@ -1,20 +1,7 @@
 import 'package:flutter/material.dart';
 import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:senior_project/data/groups_data.dart";
-import "package:senior_project/screens/groups/category_item.dart";
-import "package:senior_project/screens/groups/group_item.dart";
-import "package:senior_project/widgets/groups/specific_category_expense_row.dart";
-import "screens/authentication/signup.dart";
 import "screens/authentication/login.dart";
-import "screens/authentication/forgot_password.dart";
-import "screens/profile/profile.dart";
-import "screens/profile/profile_edit.dart";
-import "screens/profile/profile_settings.dart";
-import "screens/authentication/forgot_password.dart";
-import "screens/profile/delete_account.dart";
-import "screens/profile/profile_help.dart";
-import "screens/groups/groups.dart";
-import "screens/groups/add_group.dart";
+import "../screens/transactions/transaction_page.dart";
 
 void main() {
   runApp(ProviderScope(child:MyApp()));

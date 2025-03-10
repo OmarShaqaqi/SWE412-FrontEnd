@@ -1,18 +1,21 @@
 import "dart:convert";
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
+import 'package:senior_project/Providers/token_provider.dart';
+import 'package:senior_project/Providers/user_provider.dart';
+import 'package:senior_project/templates/custom_scaffold.dart';
 import "package:senior_project/templates/custom_body_with_image.dart";
-import "package:senior_project/templates/custom_scaffold_token.dart";
 
-class ProfileEditScreen extends StatefulWidget {
-  final String token;
-  const ProfileEditScreen({super.key, required this.token});
+
+class ProfileEditScreen extends ConsumerStatefulWidget {
+  const ProfileEditScreen({super.key});
 
   @override
-  State<ProfileEditScreen> createState() => _ProfileEditState();
+  ConsumerState<ProfileEditScreen> createState() => _ProfileEditState();
 }
 
-class _ProfileEditState extends State<ProfileEditScreen> {
+class _ProfileEditState extends ConsumerState<ProfileEditScreen> {
   bool _darkModeEnabled = false;
   String username = "Loading...";
   String phoneNumber = "Loading...";
@@ -26,6 +29,13 @@ class _ProfileEditState extends State<ProfileEditScreen> {
 
   // ✅ Function to fetch user profile data
   Future<void> fetchUserProfile() async {
+    final token = ref.read(tokenProvider); // ✅ Read token from Riverpod
+
+    if (token == null) {
+      print("Error: No token found");
+      return;
+    }
+
     final url = Uri.parse("http://10.0.2.2:8080/getinfo");
 
     try {
@@ -33,7 +43,7 @@ class _ProfileEditState extends State<ProfileEditScreen> {
         url,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer ${widget.token}"
+          "Authorization": "Bearer $token"
         },
       );
 
@@ -42,7 +52,7 @@ class _ProfileEditState extends State<ProfileEditScreen> {
         setState(() {
           username = data["username"].toString();
           phoneNumber = data["phone"].toString();
-          usernameController.text = username; // Set initial username in text field
+          usernameController.text = username;
         });
       } else {
         print("Error: ${response.body}");
@@ -52,8 +62,15 @@ class _ProfileEditState extends State<ProfileEditScreen> {
     }
   }
 
-  // ✅ Function to update username via POST request
+  // ✅ Function to update username via API request
   Future<void> updateUserProfile() async {
+    final token = ref.read(tokenProvider); // ✅ Read token from Riverpod
+
+    if (token == null) {
+      print("Error: No token found");
+      return;
+    }
+
     final url = Uri.parse("http://10.0.2.2:8080/updateuser");
 
     try {
@@ -61,10 +78,10 @@ class _ProfileEditState extends State<ProfileEditScreen> {
         url,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer ${widget.token}"
+          "Authorization": "Bearer $token"
         },
         body: jsonEncode({
-          "username": usernameController.text.trim(), // Send new username
+          "username": usernameController.text.trim(),
         }),
       );
 
@@ -73,6 +90,7 @@ class _ProfileEditState extends State<ProfileEditScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Profile updated successfully!")),
         );
+        ref.read(userProvider.notifier).updateUsername(usernameController.text.trim());
       } else {
         print("Update failed: ${response.body}");
         ScaffoldMessenger.of(context).showSnackBar(
@@ -86,7 +104,9 @@ class _ProfileEditState extends State<ProfileEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final token = ref.watch(tokenProvider); // ✅ Watch token from Riverpod
     final String image = 'assets/anonymous_profile.png';
+
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -165,10 +185,9 @@ class _ProfileEditState extends State<ProfileEditScreen> {
       ],
     );
 
-    return CustomScaffoldToken(
+    return CustomScaffold(
       title: "Edit Profile",
       content: CustomBodyWithImage(content: content, image: image),
-      token: widget.token,
     );
   }
 }

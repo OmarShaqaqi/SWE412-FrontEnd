@@ -18,7 +18,7 @@ class CustomBodyGroup extends StatelessWidget {
             children: [
               // Total balance & total expenses
               Padding(
-                padding: const EdgeInsets.only(top: 15),
+                padding: const EdgeInsets.only(top: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -101,7 +101,7 @@ class CustomBodyGroup extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               const Text(
                 "30% of your expenses, looks good.",
                 style: TextStyle(color: Colors.white),

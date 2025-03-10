@@ -88,7 +88,10 @@ class _AddGroupState extends ConsumerState<AddGroup> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: addGroup, // ✅ Call addGroup function
-                child: const Text("Add Group"),
+                child: const Text("Add Group",style: TextStyle(color: Colors.white),),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 0, 208, 158),
+              ),                
               ),
             ],
           ),

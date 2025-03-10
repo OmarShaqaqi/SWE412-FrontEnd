@@ -40,8 +40,9 @@ class _CategoriesListState extends ConsumerState<CategoriesList> {
       children: [
         const Text(
           "Categories",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,),
         ),
+        SizedBox(height: 16),
         Expanded(
           child: isLoading
               ? const Center(child: CircularProgressIndicator()) // Show loader while fetching

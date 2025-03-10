@@ -28,7 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  fl_chart: ^0.40.0  # or the latest version
+  fl_chart: ^0.70.2  # or the latest version
   http: ^1.3.0
   flutter:
     sdk: flutter
@@ -77,6 +77,34 @@ flutter:
     - assets/Category.png
     - assets/Profile.png
     - assets/anonymous_profile.png
+    - assets/vector_animation.json
+    - assets/car.png
+    - assets/car_pressed.png
+    - assets/food.png
+    - assets/food_pressed.png
+    - assets/gift.png
+    - assets/gift_pressed.png
+    - assets/groc.png
+    - assets/groc_pressed.png
+    - assets/house.png
+    - assets/house_pressed.png
+    - assets/med.png
+    - assets/med_pressed.png
+    - assets/movie.png
+    - assets/movie_pressed.png
+    - assets/rent.png
+    - assets/rent_pressed.png
+    - assets/salary.png
+    - assets/salary_pressed.png
+    - assets/transport.png
+    - assets/transport_pressed.png
+    - assets/travel.png
+    - assets/travel_pressed.png
+    - assets/wedding.png
+    - assets/wedding_pressed.png
+    - assets/calendar.png
+    - assets/Saudi_Riyal_Symbol.png
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

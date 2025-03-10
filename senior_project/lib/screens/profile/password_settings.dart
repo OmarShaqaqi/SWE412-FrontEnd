@@ -1,25 +1,34 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import "package:senior_project/templates/custom_scaffold_token.dart";
+import 'package:senior_project/Providers/token_provider.dart';
+import 'package:senior_project/templates/custom_scaffold.dart';
 import "../../templates/custom_body.dart";
-import "../../widgets/password.dart";
 
-class PasswordSettingsScreen extends StatefulWidget {
-  final String token;
-  const PasswordSettingsScreen({super.key, required this.token});
+class PasswordSettingsScreen extends ConsumerStatefulWidget {
+  const PasswordSettingsScreen({super.key});
 
   @override
-  State<PasswordSettingsScreen> createState() => _PasswordSettingsScreenState();
+  ConsumerState<PasswordSettingsScreen> createState() => _PasswordSettingsScreenState();
 }
 
-class _PasswordSettingsScreenState extends State<PasswordSettingsScreen> {
+class _PasswordSettingsScreenState extends ConsumerState<PasswordSettingsScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
   // ✅ Function to update password
   Future<void> changePassword() async {
+    final token = ref.read(tokenProvider); // ✅ Read token from Riverpod
+
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Authentication error: No token found")),
+      );
+      return;
+    }
+
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -38,15 +47,15 @@ class _PasswordSettingsScreenState extends State<PasswordSettingsScreen> {
         url,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer ${widget.token}",
+          "Authorization": "Bearer $token", // ✅ Use token from provider
         },
         body: jsonEncode({
           "newPassword": newPasswordController.text.trim(),
         }),
       );
-      print(widget.token);
-      print(response.statusCode);
-      print("Response: ${response.body}");
+
+      print("Response Code: ${response.statusCode}");
+      print("Response Body: ${response.body}");
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -73,32 +82,32 @@ class _PasswordSettingsScreenState extends State<PasswordSettingsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text("New Password"),
-                TextFormField(
-                controller: newPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "●●●●●●●●",
-                  filled: true,
-                  fillColor: const Color.fromARGB(255, 223, 247, 226),
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                  ),
-                ),
-              ), // Password field with controller
+          TextFormField(
+            controller: newPasswordController,
+            obscureText: true,
+            decoration: const InputDecoration(
+              hintText: "●●●●●●●●",
+              filled: true,
+              fillColor: Color.fromARGB(255, 223, 247, 226),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(18.0)),
+              ),
+            ),
+          ),
           const SizedBox(height: 16),
           const Text("Confirm New Password"),
-                TextFormField(
-                controller: confirmPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "●●●●●●●●",
-                  filled: true,
-                  fillColor: const Color.fromARGB(255, 223, 247, 226),
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                  ),
-                ),
+          TextFormField(
+            controller: confirmPasswordController,
+            obscureText: true,
+            decoration: const InputDecoration(
+              hintText: "●●●●●●●●",
+              filled: true,
+              fillColor: Color.fromARGB(255, 223, 247, 226),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(18.0)),
               ),
+            ),
+          ),
           const SizedBox(height: 32),
           Center(
             child: ElevatedButton(
@@ -122,10 +131,9 @@ class _PasswordSettingsScreenState extends State<PasswordSettingsScreen> {
       ),
     );
 
-    return CustomScaffoldToken(
+    return CustomScaffold(
       title: "Password Settings",
       content: CustomBody(content: content),
-      token: widget.token,
     );
   }
 }

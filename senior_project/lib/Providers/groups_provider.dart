@@ -56,6 +56,7 @@ Future<void> addGroup(String name, int budget, WidgetRef ref) async {
 
       // ✅ Save the groupId in selectedGroupIdProvider
       ref.read(selectedGroupIdProvider.notifier).state = newGroup.id;
+      
 
       print("Selected Group ID: ${newGroup.id}");
     } else {

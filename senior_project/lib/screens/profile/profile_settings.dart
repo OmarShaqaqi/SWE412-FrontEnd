@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import "package:senior_project/screens/profile/password_settings.dart";
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import "package:senior_project/Providers/token_provider.dart";
 import "package:senior_project/templates/custom_scaffold.dart";
-import "package:senior_project/templates/custom_scaffold_token.dart";
-import "../../templates/custom_bottom_navigation_bar.dart";
+import "package:senior_project/screens/profile/password_settings.dart";
 import "../../templates/custom_body.dart";
 import "./delete_account.dart";
 
-class ProfileSettingsScreen extends StatelessWidget {
-  final String token;
-  const ProfileSettingsScreen({super.key, required this.token});
+class ProfileSettingsScreen extends ConsumerWidget {
+  const ProfileSettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final token = ref.watch(tokenProvider); // ✅ Get token from Riverpod
+
     final content = ListView(
       children: [
         ListTile(
@@ -40,11 +40,12 @@ class ProfileSettingsScreen extends StatelessWidget {
             size: 16,
           ),
           onTap: () {
-            // Navigate to Password Settings screen
+            // ✅ Navigate and pass token automatically from provider
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => PasswordSettingsScreen(token: token,)),
+                builder: (context) => const PasswordSettingsScreen(),
+              ),
             );
           },
         ),
@@ -73,23 +74,23 @@ class ProfileSettingsScreen extends StatelessWidget {
             size: 16,
           ),
           onTap: () {
-            // Navigate to Password Settings screen
+            // ✅ Navigate and pass token automatically from provider
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>  DeleteAccountScreen(token: token,)),
+                builder: (context) => const DeleteAccountScreen(),
+              ),
             );
           },
         ),
       ],
     );
 
-    return CustomScaffoldToken(
-        title: "Settings",
-        content: CustomBody(
-          content: content,
-        ),        
-        token: token,
-        );
+    return CustomScaffold(
+      title: "Settings",
+      content: CustomBody(
+        content: content,
+      ),
+    );
   }
 }

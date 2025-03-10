@@ -3,6 +3,8 @@ import "../screens/profile/profile.dart";
 import "../screens/groups/groups.dart";
 import "../screens/home/HomeScreen.dart";
 import "../screens/analyst/analysis.dart";
+import "../screens/analyst/search_page.dart";
+import "../screens/transactions/transaction_page.dart";
 
 class CustomBottomNavigationBar extends StatefulWidget {
   const CustomBottomNavigationBar({super.key});
@@ -19,10 +21,11 @@ class _CustomBottomNavigationBar extends State<CustomBottomNavigationBar> {
   // List of screens corresponding to each tab
   final List<Widget> _screens = [
     const HomeScreen(),
-    // const AnalysisPage(),
-    const Text("Soon"),
+    const AnalysisPage(),
+    //const SearchPage(),
+    const TransactionPage(),
     const GroupsScreen(),
-    ProfileScreen(token: 'your_token_here'),    
+    ProfileScreen(),    
   ];
 
   // Function to navigate to the selected screen

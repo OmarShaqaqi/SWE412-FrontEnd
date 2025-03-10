@@ -1,45 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import "package:senior_project/Providers/token_provider.dart";
+import "package:senior_project/Providers/user_provider.dart";
+import "package:senior_project/templates/custom_scaffold.dart";
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:senior_project/Providers/token_provider.dart';
 import "package:senior_project/templates/custom_body_with_image.dart";
-import "package:senior_project/templates/custom_scaffold_token.dart";
 import "../../widgets/dialog_utils.dart";
 import "./profile_edit.dart";
 import "./profile_settings.dart";
 import "./profile_help.dart";
 
-class ProfileScreen extends StatefulWidget {
-  final String token; // Receiving the token
-
-  const ProfileScreen({super.key, required this.token});
+class ProfileScreen extends ConsumerStatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreen();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreen extends State<ProfileScreen> {
-  String username = "Loading...";
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+ late String username;
   String phoneNumber = "Loading...";
-
 
   @override
   void initState() {
     super.initState();
+    username = ref.read(userProvider);
     fetchUserProfile();
   }
 
-  // ✅ Function to make an authenticated request
+  // ✅ Fetch user profile from API using token from Riverpod provider
   Future<void> fetchUserProfile() async {
-    final url = Uri.parse("http://10.0.2.2:8080/getinfo"); // Adjust to your Spring Boot API endpoint
+    final token = ref.read(tokenProvider); // ✅ Read token from Riverpod
+
+    if (token == null) {
+      print("Error: No token found");
+      return;
+    }
+
+    final url = Uri.parse("http://10.0.2.2:8080/getinfo");
 
     try {
       final response = await http.get(
         url,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer ${widget.token}" // Send token in Authorization header
+          "Authorization": "Bearer $token",
         },
       );
 
@@ -59,6 +66,7 @@ class _ProfileScreen extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final token = ref.watch(tokenProvider); // ✅ Watch token from Riverpod
     final String image = 'assets/anonymous_profile.png';
 
     final content = Column(
@@ -82,21 +90,36 @@ class _ProfileScreen extends State<ProfileScreen> {
                 leading: const Icon(Icons.person, color: Colors.blue),
                 title: const Text("Edit Profile"),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileEditScreen(token: widget.token,)));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfileEditScreen(),
+                    ),
+                  );
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.settings, color: Colors.blue),
                 title: const Text("Settings"),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) =>  ProfileSettingsScreen(token: widget.token,)));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfileSettingsScreen(),
+                    ),
+                  );
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.help_outline, color: Colors.blue),
                 title: const Text("Help"),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileHelpScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileHelpScreen(),
+                    ),
+                  );
                 },
               ),
               ListTile(
@@ -112,10 +135,9 @@ class _ProfileScreen extends State<ProfileScreen> {
       ],
     );
 
-    return CustomScaffoldToken(
+    return CustomScaffold(
       title: "Profile",
       content: CustomBodyWithImage(content: content, image: image),
-      token: widget.token,
     );
   }
 }

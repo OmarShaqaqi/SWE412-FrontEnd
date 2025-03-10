@@ -15,6 +15,7 @@ class CustomScaffold extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 0, 208, 158),
       appBar: CustomAppbar(title: title),
       extendBody: true,
+      resizeToAvoidBottomInset: false, 
       body: content, // Use the passed content as the body
       bottomNavigationBar: const CustomBottomNavigationBar(),
     );

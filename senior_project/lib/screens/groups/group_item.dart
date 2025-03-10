@@ -25,7 +25,7 @@ class _GroupItemScreenState extends ConsumerState<GroupItemScreen> {
   @override
   Widget build(BuildContext context) {
     final bool isLeader = ref.watch(userRoleProvider);
-    final content = PageView(
+    final content =  PageView(
       scrollDirection: Axis.horizontal,
       controller: _pageController,
       onPageChanged: (index) {
@@ -46,13 +46,13 @@ class _GroupItemScreenState extends ConsumerState<GroupItemScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            SizedBox(
-              height: 400,
+            Expanded(
               child: content,
             ),
             Container(
-              margin: const EdgeInsets.symmetric(vertical: 16),
-              height: 35,
+              //  margin: const EdgeInsets.symmetric(vertical: 16),
+              margin: const EdgeInsets.only(top: 10, bottom: 30),
+              height: 35, 
               width: 180,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 0, 208, 158),

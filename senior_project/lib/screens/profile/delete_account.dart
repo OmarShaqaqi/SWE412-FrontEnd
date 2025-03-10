@@ -1,26 +1,34 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:senior_project/Providers/token_provider.dart';
+import 'package:senior_project/templates/custom_scaffold.dart';
 import "package:senior_project/screens/authentication/login.dart";
 import "package:senior_project/templates/custom_body.dart";
-import "package:senior_project/templates/custom_scaffold_token.dart";
 import "package:senior_project/widgets/bullet_list.dart";
-import "../../widgets/password.dart";
-import "../../widgets/dialog_utils.dart";
 
-class DeleteAccountScreen extends StatefulWidget {
-  final String token;
-  const DeleteAccountScreen({super.key, required this.token});
+class DeleteAccountScreen extends ConsumerStatefulWidget {
+  const DeleteAccountScreen({super.key});
 
   @override
-  State<DeleteAccountScreen> createState() => _DeleteAccountState();
+  ConsumerState<DeleteAccountScreen> createState() => _DeleteAccountState();
 }
 
-class _DeleteAccountState extends State<DeleteAccountScreen> {
+class _DeleteAccountState extends ConsumerState<DeleteAccountScreen> {
   final TextEditingController passwordController = TextEditingController();
 
-  // ✅ Function to send POST request to delete the account
+  // ✅ Function to send DELETE request to delete the account
   Future<void> deleteAccount() async {
+    final token = ref.read(tokenProvider); // ✅ Read token from Riverpod
+
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Authentication error: No token found")),
+      );
+      return;
+    }
+
     if (passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please enter your password")),
@@ -35,22 +43,29 @@ class _DeleteAccountState extends State<DeleteAccountScreen> {
         url,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer ${widget.token}",
+          "Authorization": "Bearer $token",
         },
         body: jsonEncode({
           "password": passwordController.text.trim(),
         }),
       );
 
+      print("Response Code: ${response.statusCode}");
+      print("Response Body: ${response.body}");
+
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Account deleted successfully")),
         );
-        
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
 
-        // Navigate to the login screen or another screen after deletion
-        Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
+        // ✅ Clear token and navigate to login screen
+        await ref.read(tokenProvider.notifier).removeToken();
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+          (route) => false, // ✅ Removes all previous routes
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Error: ${response.body}")),
@@ -106,15 +121,15 @@ class _DeleteAccountState extends State<DeleteAccountScreen> {
         TextFormField(
           controller: passwordController,
           obscureText: true,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: "●●●●●●●●",
             filled: true,
-            fillColor: const Color.fromARGB(255, 223, 247, 226),
-            border: const OutlineInputBorder(
+            fillColor: Color.fromARGB(255, 223, 247, 226),
+            border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(18.0)),
             ),
           ),
-        ), // ✅ Password input field
+        ),
         const SizedBox(height: 16),
         ElevatedButton(
           onPressed: deleteAccount, // ✅ Call function on button press
@@ -150,10 +165,9 @@ class _DeleteAccountState extends State<DeleteAccountScreen> {
       ],
     );
 
-    return CustomScaffoldToken(
+    return CustomScaffold(
       title: "Delete Account",
       content: CustomBody(content: content),
-      token: widget.token,
     );
   }
 }
