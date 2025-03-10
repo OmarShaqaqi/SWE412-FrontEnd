@@ -3,6 +3,7 @@ import 'package:senior_project/screens/home/NewExpense.dart';
 import 'package:senior_project/screens/home/categroyUI_home.dart';
 import 'package:senior_project/screens/home/gourpsUI_home.dart';
 import 'package:senior_project/screens/home/groupExpense.dart';
+import 'package:senior_project/widgets/price_widget.dart';
 import "../../templates/custom_bottom_navigation_bar.dart";
 
 class HomeScreen extends StatelessWidget {
@@ -37,7 +38,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 // Total balance & total expenses
                 Padding(
-                  padding: const EdgeInsets.only(top: 30),
+                  padding: const EdgeInsets.only(top: 25),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -51,14 +52,7 @@ class HomeScreen extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            "1000 SAR",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
+                          PriceWidget(price: 1000),
                         ],
                       ),
                       Container(
@@ -76,21 +70,14 @@ class HomeScreen extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            "1000 SAR",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
+                          PriceWidget(price: 1000),
                         ],
                       )
                     ],
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 // Progress bar
                 Row(
@@ -98,7 +85,7 @@ class HomeScreen extends StatelessWidget {
                     Expanded(
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 10),
-                        height: 30,
+                        height: 25,
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(255, 241, 255, 243),
                           borderRadius: BorderRadius.circular(15),
@@ -120,7 +107,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 const Text(
                   "30% of your expenses, looks good.",
                   style: TextStyle(color: Colors.white),

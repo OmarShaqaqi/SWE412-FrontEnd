@@ -183,160 +183,162 @@ class _AnalysisPageState extends State<AnalysisPage> {
 
   @override
   Widget build(BuildContext context) {
-    final content = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Tab Selector
-        ClipRRect(
-          borderRadius: BorderRadius.circular(16.0), // Set the border radius
-          child: Container(
-            color: const Color(0xffdff7e2), // Set the background color
-            padding: const EdgeInsets.all(8.0), // Add some padding
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: ['Daily', 'Weekly', 'Monthly', 'Yearly']
-                  .asMap()
-                  .entries
-                  .map((entry) {
-                int index = entry.key;
-                String label = entry.value;
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedTab = index;
-                      _updateExpenses(); // Update expenses based on the selected tab
-                    });
-                  },
-                  child: Chip(
-                    label: Text(label),
-                    backgroundColor: selectedTab == index
-                        ? const Color(0xff00d09e)
-                        : const Color(0xffdff7e2),
-                    labelStyle: TextStyle(
-                      color: selectedTab == index ? Colors.white : Colors.black,
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ),
-
-        const SizedBox(height: 16),
-
-        // Graph Section
-        ClipRRect(
-          borderRadius: BorderRadius.circular(16.0), // Set the border radius
-          child: Container(
-            color: Color(
-                0xffdff7e2), // Set the background color of the graph section
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Income & Expenses",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Color(0xff093030),
+    final content = SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Tab Selector
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16.0), // Set the border radius
+            child: Container(
+              color: const Color(0xffdff7e2), // Set the background color
+              padding: const EdgeInsets.all(8.0), // Add some padding
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: ['Daily', 'Weekly', 'Monthly', 'Yearly']
+                    .asMap()
+                    .entries
+                    .map((entry) {
+                  int index = entry.key;
+                  String label = entry.value;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedTab = index;
+                        _updateExpenses(); // Update expenses based on the selected tab
+                      });
+                    },
+                    child: Chip(
+                      label: Text(label),
+                      backgroundColor: selectedTab == index
+                          ? const Color(0xff00d09e)
+                          : const Color(0xffdff7e2),
+                      labelStyle: TextStyle(
+                        color: selectedTab == index ? Colors.white : Colors.black,
                       ),
                     ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SearchPage(),
-                              ),
-                            );
-                          },
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+      
+          const SizedBox(height: 16),
+      
+          // Graph Section
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16.0), // Set the border radius
+            child: Container(
+              color: Color(
+                  0xffdff7e2), // Set the background color of the graph section
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Income & Expenses",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Color(0xff093030),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.calendar_today),
-                          onPressed: () {
-                            // Navigate to Calendar Page
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SchedulePage(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                // Bar Graph
-                SizedBox(
-                  height: 200,
-                  child: BarChart(
-                    BarChartData(
-                      barGroups: _buildBarGroups(),
-                      borderData: FlBorderData(show: false),
-                      titlesData: FlTitlesData(
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            getTitlesWidget: (double value, TitleMeta meta) {
-                              switch (selectedTab) {
-                                case 0: // Daily
-                                  const days = [
-                                    'Sun',
-                                    'Mon',
-                                    'Tue',
-                                    'Wed',
-                                    'Thu',
-                                    'Fri',
-                                    'Sat'
-                                  ];
-                                  return Text(days[value.toInt()]);
-                                case 1: // Weekly
-                                  return Text('${value.toInt() + 1}-week');
-                                case 2: // Monthly
-                                  const months = [
-                                    'Jan',
-                                    'Feb',
-                                    'Mar',
-                                    'Apr',
-                                    'May',
-                                    'Jun',
-                                    'Jul',
-                                    'Aug',
-                                    'Sep',
-                                    'Oct',
-                                    'Nov',
-                                    'Dec'
-                                  ];
-                                  return Text(months[(DateTime.now().month -
-                                          6 +
-                                          value.toInt()) %
-                                      12]);
-                                case 3: // Yearly
-                                  final currentYear = DateTime.now().year;
-                                  return Text(
-                                      '${currentYear - 4 + value.toInt()}');
-                                default:
-                                  return Text('');
-                              }
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.search),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SearchPage(),
+                                ),
+                              );
                             },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.calendar_today),
+                            onPressed: () {
+                              // Navigate to Calendar Page
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SchedulePage(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  // Bar Graph
+                  SizedBox(
+                    height: 200,
+                    child: BarChart(
+                      BarChartData(
+                        barGroups: _buildBarGroups(),
+                        borderData: FlBorderData(show: false),
+                        titlesData: FlTitlesData(
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              getTitlesWidget: (double value, TitleMeta meta) {
+                                switch (selectedTab) {
+                                  case 0: // Daily
+                                    const days = [
+                                      'Sun',
+                                      'Mon',
+                                      'Tue',
+                                      'Wed',
+                                      'Thu',
+                                      'Fri',
+                                      'Sat'
+                                    ];
+                                    return Text(days[value.toInt()]);
+                                  case 1: // Weekly
+                                    return Text('${value.toInt() + 1}-week');
+                                  case 2: // Monthly
+                                    const months = [
+                                      'Jan',
+                                      'Feb',
+                                      'Mar',
+                                      'Apr',
+                                      'May',
+                                      'Jun',
+                                      'Jul',
+                                      'Aug',
+                                      'Sep',
+                                      'Oct',
+                                      'Nov',
+                                      'Dec'
+                                    ];
+                                    return Text(months[(DateTime.now().month -
+                                            6 +
+                                            value.toInt()) %
+                                        12]);
+                                  case 3: // Yearly
+                                    final currentYear = DateTime.now().year;
+                                    return Text(
+                                        '${currentYear - 4 + value.toInt()}');
+                                  default:
+                                    return Text('');
+                                }
+                              },
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
 
     return Scaffold(

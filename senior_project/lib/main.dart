@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:senior_project/screens/landingPage/landing_page.dart";
 import "screens/authentication/login.dart";
 import "../screens/transactions/transaction_page.dart";
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Senior Project',
-      home: LoginScreen(),
+      home: IntroPage(),
     );
   }
 }

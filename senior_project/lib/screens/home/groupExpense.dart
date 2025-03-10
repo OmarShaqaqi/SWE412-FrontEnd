@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:senior_project/data/groups_data.dart';
 import 'package:senior_project/screens/home/categorization.dart';
 import 'package:senior_project/screens/profile/profile_edit.dart';
+import 'package:senior_project/widgets/price_widget.dart';
 import "../../templates/custom_bottom_navigation_bar.dart";
 
 class Groupexpense extends StatelessWidget {
@@ -10,13 +11,13 @@ class Groupexpense extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
- // Add your functionality here
-  },
+        // Add your functionality here
+      },
       child: Column(
         children: [
           Container(
-              width:
-                  double.infinity, // Make the container take up 100% of the width
+              width: double
+                  .infinity, // Make the container take up 100% of the width
               height: 89, // Set the height of the container
               // color: const Color.fromRGBO(88, 204, 176, 1), // Light green background
               padding: const EdgeInsets.only(
@@ -39,7 +40,9 @@ class Groupexpense extends StatelessWidget {
                   // ignore: prefer_const_constructors
                   Column(
                     children: [
-                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Text(
                         "Participant 1",
                         style: const TextStyle(
@@ -48,32 +51,24 @@ class Groupexpense extends StatelessWidget {
                           fontWeight: FontWeight.w800,
                         ),
                       ),
-                      Text(
-                        " 500 SAR",
-                        style: const TextStyle(
-                          color: Colors.blue,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
+                      PriceWidget(price: 100),
                     ],
                   ),
                   Text("Food"),
                   Row(
-                    
                     children: [
-                      ElevatedButton.icon(onPressed: (){}, 
-                                          label: Icon(Icons.check_circle_outline_sharp),
-                                          ),
-                      
-                      ElevatedButton.icon(onPressed: (){}, 
-                                          label: Icon(Icons.cancel_sharp),
-                                          )
+                      ElevatedButton.icon(
+                        onPressed: () {},
+                        label: Icon(Icons.check_circle_outline_sharp),
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () {},
+                        label: Icon(Icons.cancel_sharp),
+                      )
                     ],
                   )
                 ],
-              )
-            ),
+              )),
           SizedBox(
             width: double.infinity,
             height: 10,
@@ -93,7 +88,7 @@ class Groupexpense extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            child: Align(              
+            child: Align(
               alignment: Alignment.center,
               child: Container(
                 height: 55,
@@ -101,7 +96,7 @@ class Groupexpense extends StatelessWidget {
               ),
             ),
           ),
-                    Container(
+          Container(
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Text(
@@ -114,7 +109,6 @@ class Groupexpense extends StatelessWidget {
               ),
             ),
           ),
-
         ],
       ),
     );

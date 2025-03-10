@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:senior_project/widgets/price_widget.dart';
 
 class CustomBodyGroup extends StatelessWidget {
   final Widget content;
@@ -32,14 +33,7 @@ class CustomBodyGroup extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          "1000 SAR",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
+                        PriceWidget(price: 1000),
                       ],
                     ),
                     Container(
@@ -57,14 +51,7 @@ class CustomBodyGroup extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          "1000 SAR",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
+                        PriceWidget(price: 1000),
                       ],
                     )
                   ],
@@ -79,7 +66,7 @@ class CustomBodyGroup extends StatelessWidget {
                   Expanded(
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 30,
+                      height: 25,
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 241, 255, 243),
                         borderRadius: BorderRadius.circular(15),
@@ -101,7 +88,7 @@ class CustomBodyGroup extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
               const Text(
                 "30% of your expenses, looks good.",
                 style: TextStyle(color: Colors.white),

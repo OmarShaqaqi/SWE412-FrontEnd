@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/screens/home/categorization.dart';
 import 'package:senior_project/screens/profile/profile_edit.dart';
+import 'package:senior_project/widgets/price_widget.dart';
 import "../../templates/custom_bottom_navigation_bar.dart";
 
 class ExpenseCard extends StatelessWidget {
@@ -36,7 +37,8 @@ class ExpenseCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ThepriceUI(),
+                  // ThepriceUI(),
+                  PriceWidget(price: 0),
                   Text(
                     "some source",
                     style: const TextStyle(
@@ -75,47 +77,47 @@ class ExpenseCard extends StatelessWidget {
       ),
     );
   }
-
-  Container ThepriceUI() {
-    return Container(
-      height: double.infinity,
-      // decoration: const BoxDecoration(
-      //   color: Color.fromRGBO(0, 104, 255, 1),
-      // ),
-      margin: const EdgeInsets.only(bottom: 20),
-      child: Row(
-        children: [
-          Container(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                height: 45,
-                child: Text(
-                  "0",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 38,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Text(
-                "SAR",
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  //This is the price widget that built before
+  // Container ThepriceUI() {
+  //   return Container(
+  //     height: double.infinity,
+  //     // decoration: const BoxDecoration(
+  //     //   color: Color.fromRGBO(0, 104, 255, 1),
+  //     // ),
+  //     margin: const EdgeInsets.only(bottom: 20),
+  //     child: Row(
+  //       children: [
+  //         Container(
+  //           child: Align(
+  //             alignment: Alignment.bottomCenter,
+  //             child: Container(
+  //               height: 45,
+  //               child: Text(
+  //                 "0",
+  //                 style: const TextStyle(
+  //                   color: Colors.white,
+  //                   fontSize: 38,
+  //                   fontWeight: FontWeight.w800,
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //         Container(
+  //           child: Align(
+  //             alignment: Alignment.bottomCenter,
+  //             child: Text(
+  //               "SAR",
+  //               style: const TextStyle(
+  //                 color: Colors.black,
+  //                 fontSize: 17,
+  //                 fontWeight: FontWeight.w600,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }
