@@ -73,7 +73,7 @@ flutter:
     - assets/Profile.png
     - assets/anonymous_profile.png
     - assets/vector_animation.json
-    - assets/vector_green.png
+    - assets/vector_green.json
     - assets/car.png
     - assets/car_pressed.png
     - assets/food.png
