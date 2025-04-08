@@ -15,10 +15,10 @@ class Expense {
 
   factory Expense.fromJson(Map<String, dynamic> json) {
     return Expense(
-      id: json['id'] as int,
+      id: (json['id'] != null) ? (json['id'] as int) : 0, // ✅ Handle null id
       date: DateTime.parse(json['date']), // ✅ Convert from String to DateTime
       amount: (json['amount'] as num).toDouble(),
-      status: json['status'] as String, // ✅ Keep status as String
+      status: (json['status'] != null) ? (json['status'] as String) : "no", // ✅ Keep status as String
       categoryName: json['categoryName'] as String,
     );
   }

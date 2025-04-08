@@ -51,7 +51,7 @@ class Groupexpense extends StatelessWidget {
                           fontWeight: FontWeight.w800,
                         ),
                       ),
-                      PriceWidget(price: 100),
+                      PriceWidget(price: 100, size: 20),
                     ],
                   ),
                   Text("Food"),

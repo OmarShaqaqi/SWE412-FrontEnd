@@ -34,6 +34,7 @@ class _CategoriesListState extends ConsumerState<CategoriesList> {
 
     final categoriesState = ref.watch(categoriesProvider);
     final isLoading = ref.read(categoriesProvider.notifier).isLoading;
+    
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,

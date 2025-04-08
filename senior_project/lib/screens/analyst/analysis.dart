@@ -164,27 +164,43 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:senior_project/Providers/dateType_expense_provider.dart';
 import 'package:senior_project/screens/analyst/calendar_page.dart';
 import 'package:senior_project/screens/analyst/search_page.dart';
 import 'package:senior_project/templates/custom_appbar.dart';
 import 'package:senior_project/templates/custom_bottom_navigation_bar.dart';
 import 'package:senior_project/templates/custom_body_analysis.dart';
 
-class AnalysisPage extends StatefulWidget {
+class AnalysisPage extends ConsumerStatefulWidget {
   const AnalysisPage({Key? key}) : super(key: key);
 
   @override
-  State<AnalysisPage> createState() => _AnalysisPageState();
+  ConsumerState<AnalysisPage> createState() => _AnalysisPageState();
 }
 
-class _AnalysisPageState extends State<AnalysisPage> {
-  int selectedTab = 0; // Track active tab (0: Daily, 1: Weekly, etc.)
-  List<double> expenses = [50, 100, 75, 30, 90, 120, 60]; // Example expenses
+class _AnalysisPageState extends ConsumerState<AnalysisPage> {
+   @override
+void initState() {
+  super.initState();
+
+  Future.microtask(() {
+    ref.read(dailyExpensesProvider.notifier).fetchDailyExpenses("day");
+  });
+}
+   int selectedTab = 0; // Track active tab (0: Daily, 1: Weekly, etc.)
+  // List<double> expenses = [50, 100, 75, 30, 90, 120, 60]; // Example expenses
+ 
+
 
   @override
   Widget build(BuildContext context) {
+    final rawExpenses = ref.watch(dailyExpensesProvider);
+    final expenses = rawExpenses.values.toList(); // List<double>
+
     final content = SingleChildScrollView(
       child: Column(
+        //print(ref.read(dailyExpensesProvider.notifier).fetchDailyExpenses().toString());
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Tab Selector
@@ -195,7 +211,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
               padding: const EdgeInsets.all(8.0), // Add some padding
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: ['Daily', 'Weekly', 'Monthly', 'Yearly']
+                children: ['Daily', 'Monthly', 'Yearly']
                     .asMap()
                     .entries
                     .map((entry) {
@@ -279,7 +295,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
                     height: 200,
                     child: BarChart(
                       BarChartData(
-                        barGroups: _buildBarGroups(),
+                        barGroups: _buildBarGroups(rawExpenses),
                         borderData: FlBorderData(show: false),
                         titlesData: FlTitlesData(
                           bottomTitles: AxisTitles(
@@ -298,9 +314,8 @@ class _AnalysisPageState extends State<AnalysisPage> {
                                       'Sat'
                                     ];
                                     return Text(days[value.toInt()]);
-                                  case 1: // Weekly
-                                    return Text('${value.toInt() + 1}-week');
-                                  case 2: // Monthly
+                
+                                  case 1: // Monthly
                                     const months = [
                                       'Jan',
                                       'Feb',
@@ -319,7 +334,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
                                             6 +
                                             value.toInt()) %
                                         12]);
-                                  case 3: // Yearly
+                                  case 2: // Yearly
                                     final currentYear = DateTime.now().year;
                                     return Text(
                                         '${currentYear - 4 + value.toInt()}');
@@ -352,36 +367,57 @@ class _AnalysisPageState extends State<AnalysisPage> {
   }
 
   // Helper method to build bar groups for the graph
-  List<BarChartGroupData> _buildBarGroups() {
-    return expenses
-        .asMap()
-        .entries
-        .map(
-          (entry) => BarChartGroupData(
-            x: entry.key,
-            barRods: [
-              BarChartRodData(
-                toY: entry.value,
-                color: const Color(0xff00d09e),
-                width: 16,
-              )
-            ],
-          ),
-        )
-        .toList();
-  }
+// List<BarChartGroupData> _buildBarGroups(List<double> expenses) {
+//   return expenses.asMap().entries.map(
+//     (entry) => BarChartGroupData(
+//       x: entry.key,
+//       barRods: [
+//         BarChartRodData(
+//           toY: entry.value,
+//           color: const Color(0xff00d09e),
+//           width: 16,
+//         )
+//       ],
+//     ),
+//   ).toList();
+// }
+
+List<BarChartGroupData> _buildBarGroups(Map<String, double> rawExpenses) {
+  final sortedEntries = rawExpenses.entries.toList()
+    ..sort((a, b) => a.key.compareTo(b.key)); // Sort by date string
+
+  return sortedEntries.asMap().entries.map((entry) {
+    final index = entry.key;
+    final amount = entry.value.value;
+
+    return BarChartGroupData(
+      x: index,
+      barRods: [
+        BarChartRodData(
+          toY: amount,
+          color: const Color(0xff00d09e),
+          width: 16,
+        ),
+      ],
+    );
+  }).toList();
+}
 
   // Update expenses dynamically based on the selected tab
   void _updateExpenses() {
-    // Logic to update `expenses` based on `selectedTab`
-    if (selectedTab == 0) {
-      expenses = [50, 100, 75, 30, 90, 120, 60]; // Daily
-    } else if (selectedTab == 1) {
-      expenses = [400, 500, 450, 300]; // Weekly
-    } else if (selectedTab == 2) {
-      expenses = [1500, 2000, 1700, 1800, 1900, 2100]; // Monthly
-    } else if (selectedTab == 3) {
-      expenses = [20000, 25000, 22000, 23000, 24000]; // Yearly
-    }
+  final notifier = ref.read(dailyExpensesProvider.notifier);
+
+  switch (selectedTab) {
+    case 0:
+      notifier.fetchDailyExpenses("day");
+      break;
+    case 1:
+      notifier.fetchDailyExpenses("month");
+      break;
+    case 2:
+      notifier.fetchDailyExpenses("year");
+      break;
   }
+}
+
 }

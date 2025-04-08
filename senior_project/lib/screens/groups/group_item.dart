@@ -8,6 +8,7 @@ import 'package:senior_project/widgets/groups/categories_list.dart';
 import 'package:senior_project/widgets/groups/expenses_list.dart';
 import '../../widgets/groups/members_list.dart';
 import '../../widgets/groups/categories_list.dart';
+import 'package:senior_project/Providers/participants_provider.dart';
 
 class GroupItemScreen extends ConsumerStatefulWidget {
   const GroupItemScreen({super.key, required this.name});

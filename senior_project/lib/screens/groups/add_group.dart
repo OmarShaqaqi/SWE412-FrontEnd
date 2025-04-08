@@ -6,7 +6,7 @@ import 'package:senior_project/screens/groups/add_participant.dart';
 import 'package:senior_project/Providers/token_provider.dart';
 import "package:senior_project/templates/custom_body.dart";
 import "package:senior_project/templates/custom_scaffold.dart";
-import "../../widgets/participants_list.dart";
+
 
 class AddGroup extends ConsumerStatefulWidget {
   const AddGroup({super.key});

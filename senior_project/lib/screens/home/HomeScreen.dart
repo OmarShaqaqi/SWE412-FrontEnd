@@ -1,141 +1,177 @@
-import 'package:flutter/material.dart';
-import 'package:senior_project/screens/home/NewExpense.dart';
-import 'package:senior_project/screens/home/categroyUI_home.dart';
-import 'package:senior_project/screens/home/gourpsUI_home.dart';
-import 'package:senior_project/screens/home/groupExpense.dart';
-import 'package:senior_project/widgets/price_widget.dart';
-import "../../templates/custom_bottom_navigation_bar.dart";
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:senior_project/Providers/todayExpense_provider.dart';
+// import 'package:senior_project/screens/home/NewExpense.dart';
+// import 'package:senior_project/screens/home/groupExpense.dart';
+// import 'package:senior_project/templates/custom_body_group.dart';
+// import "package:senior_project/templates/custom_scaffold.dart";
 
-class HomeScreen extends StatelessWidget {
+// class HomeScreen extends StatelessWidget {
+//   const HomeScreen({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return CustomScaffold(
+//       title: "Home",
+//       content: CustomBodyGroup(
+//         content: SingleChildScrollView(
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.start,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Row(
+//                 children: [
+//                   SizedBox(
+//                     width: 15,
+//                   ),
+//                   Text("Recent Transactions",
+//                       style: TextStyle(
+//                           fontSize: 20,
+//                           fontWeight: FontWeight.w500,
+//                           color: Colors.black)),
+//                 ],
+//               ),
+//               SingleChildScrollView(
+//                 padding:
+//                     const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+//                 child: Column(
+//                     // add the expense cards here
+//                     children: [
+//                       ExpenseCard(
+//                         amount: 42.75,
+//                         title: "Coffee with team",
+//                         date: DateTime.now(),
+//                       ),
+//                       ExpenseCard(
+//                         amount: 42.75,
+//                         title: "Family",
+//                         date: DateTime.now(),
+//                       ),
+//                     ]),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class HomeScreen extends ConsumerWidget {
+//   const HomeScreen({super.key});
+
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final asyncExpenses = ref.watch(todayExpensesProvider);
+//     print(asyncExpenses);
+
+//     return CustomScaffold(
+//       title: "Home",
+//       content: CustomBodyGroup(
+//         content: SingleChildScrollView(
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               const SizedBox(height: 15),
+//               const Padding(
+//                 padding: EdgeInsets.symmetric(horizontal: 15),
+//                 child: Text("Recent Transactions",
+//                     style: TextStyle(
+//                         fontSize: 20,
+//                         fontWeight: FontWeight.w500,
+//                         color: Colors.black)),
+//               ),
+//               asyncExpenses.when(
+//                 data: (expenses) => Padding(
+//                   padding:
+//                       const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+//                   child: Column(
+//                     children: expenses.map((expense) {
+//                       return ExpenseCard(
+//                         amount: expense.amount,
+//                         title: expense.categoryName,
+//                         date: expense.date,
+//                       );
+//                     }).toList(),
+//                   ),
+//                 ),
+//                 loading: () =>
+//                     const Center(child: CircularProgressIndicator()),
+//                 error: (error, stack) => Center(
+//                   child: Text('Error: $error'),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:senior_project/Providers/todayExpense_provider.dart';
+import 'package:senior_project/models/expense_model.dart';
+import 'package:senior_project/screens/home/NewExpense.dart';
+import 'package:senior_project/screens/home/groupExpense.dart';
+import 'package:senior_project/templates/custom_body_group.dart';
+import "package:senior_project/templates/custom_scaffold.dart";
+
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor:
-          const Color.fromARGB(255, 0, 208, 158), // Dark green background
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(30),
-        child: AppBar(
-          title: const Text(
-            "Hi, Welcome Back",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: true,
-          backgroundColor: const Color.fromARGB(255, 0, 208, 158),
-          elevation: 0,
-        ),
-      ),
-      extendBody: true,
-      body: Column(
-        children: [
-          Container(
-            color: const Color.fromARGB(255, 0, 208, 158),
-            child: Column(
-              children: [
-                // Total balance & total expenses
-                Padding(
-                  padding: const EdgeInsets.only(top: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Column(
-                        children: [
-                          Text(
-                            "Total balance",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          PriceWidget(price: 1000),
-                        ],
-                      ),
-                      Container(
-                        height: 50,
-                        width: 1,
-                        color: Colors.white,
-                      ),
-                      const Column(
-                        children: [
-                          Text(
-                            "Total Expenses",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          PriceWidget(price: 1000),
-                        ],
-                      )
-                    ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    final todayExpenses = ref.watch(todayExpensesProvider);  
+
+
+    return CustomScaffold(
+      title: "Home",
+      content: CustomBodyGroup(
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Text("Recent Transactions",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    )),
+              ),
+              todayExpenses.when(
+                data: (expenses) => Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+                  child: Column(
+                    children: expenses.map((expense) {
+                      return ExpenseCard(
+                        amount: expense.amount,
+                        title: expense.categoryName,
+                        date: expense.date,
+                      );
+                    }).toList(),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                // Progress bar
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        height: 25,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 241, 255, 243),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: FractionallySizedBox(
-                          alignment: Alignment.centerLeft,
-                          widthFactor: 0.3, // Adjust width based on percentage
-                          child: Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: const Text("30%",
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  "30% of your expenses, looks good.",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-          // Group cards
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(top: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 241, 255, 243), // Light green
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stack) => Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Error loading expenses: $error',
+                    style: const TextStyle(color: Colors.red),
+                  ),
                 ),
               ),
-              child: Column(
-                  // add the expense cards here
-                  children: [ExpenseCard(), ExpenseCard(),Groupexpense()]),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
-
-      bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
 }
+

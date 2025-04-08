@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:senior_project/Providers/categories_provider.dart';
+import 'package:senior_project/Providers/expenses_provider.dart';
 import 'package:senior_project/Providers/groups_provider.dart';
 import 'package:senior_project/templates/custom_body_group.dart';
 import 'package:senior_project/templates/custom_scaffold.dart';
 import 'package:senior_project/Providers/token_provider.dart';
 import 'package:senior_project/widgets/groups/specific_category_expense_row.dart';
 import "../../widgets/dialog_utils.dart";
-
+import 'package:senior_project/models/expense_model.dart';
 class CategoryItemScreen extends ConsumerStatefulWidget {
   const CategoryItemScreen({super.key, required this.title});
 
@@ -32,6 +33,7 @@ class _CategoryItemState extends ConsumerState<CategoryItemScreen> {
     final groupId = ref.read(selectedGroupIdProvider);
     final categoriesState = ref.watch(categoriesProvider);
     final List<String> categories = categoriesState.map((c) => c.categoryName).toList();
+    final expenses = ref.watch(expensesProvider).where((expense) => expense.categoryName == widget.title || expense.isPending=="APPROVED").toList();
     final content = Column(
       children: [
         Expanded(
@@ -39,8 +41,10 @@ class _CategoryItemState extends ConsumerState<CategoryItemScreen> {
             padding:
                 const EdgeInsets.only(top: 8.0, right: 8, left: 8, bottom: 0),
             child: ListView.builder(
-              itemCount: 8,
-              itemBuilder: (context, index) => SpecificCategoryExpenseRow(),
+              itemCount: expenses.length,
+              itemBuilder: (context, index) => SpecificCategoryExpenseRow(
+                    expense: expenses[index], // Pass expense to row widget
+                  ),
             ),
           ),
         ),

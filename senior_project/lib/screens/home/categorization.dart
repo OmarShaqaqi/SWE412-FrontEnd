@@ -55,7 +55,7 @@ class _CategorizationState extends State<Categorization> {
                   SizedBox(
                     height: 10,
                   ),
-                  ExpenseCard(),
+                  //ExpenseCard(),
                   GroupsUiHome(),
                   CategroyuiHome(),
                 ],

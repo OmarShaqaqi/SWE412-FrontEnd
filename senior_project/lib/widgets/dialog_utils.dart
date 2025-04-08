@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/Providers/groups_provider.dart';
+import 'package:senior_project/models/participant_model.dart';
 import 'package:senior_project/screens/authentication/login.dart';
 import "../Providers/categories_provider.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
@@ -308,11 +309,11 @@ Future<void> deleteDialog(BuildContext context) {
       });
 }
 
-Future<void> participantInfo(BuildContext context) {
+Future<void> participantInfo(BuildContext context, Participant participant) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
-      return const AlertDialog(
+      return  AlertDialog(
         backgroundColor: Colors.white,
         actionsAlignment: MainAxisAlignment.center,
         titlePadding: const EdgeInsets.all(16),
@@ -321,20 +322,20 @@ Future<void> participantInfo(BuildContext context) {
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        content: const Column(
+        content:  Column(
           mainAxisSize:
               MainAxisSize.min, // Dynamically adapts to content height
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Name"),
+                const Text("Phone"),
                 const SizedBox(width: 10),
                 SizedBox(
                   width: 200,
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: "your name",
+                      hintText: participant.phone,
                       filled: true,
                       fillColor: const Color.fromARGB(255, 223, 247, 226),
                       border: const OutlineInputBorder(
@@ -357,7 +358,7 @@ Future<void> participantInfo(BuildContext context) {
                   width: 200,
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: "amount paid",
+                      hintText: participant.totalExpense.toString(),
                       filled: true,
                       fillColor: const Color.fromARGB(255, 223, 247, 226),
                       border: const OutlineInputBorder(
@@ -374,13 +375,13 @@ Future<void> participantInfo(BuildContext context) {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Number"),
+                const Text("isLeader"),
                 const SizedBox(width: 10),
                 SizedBox(
                   width: 200,
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: "contact number",
+                      hintText: participant.isLeader.toString(),
                       filled: true,
                       fillColor: const Color.fromARGB(255, 223, 247, 226),
                       border: const OutlineInputBorder(
