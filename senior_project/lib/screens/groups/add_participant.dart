@@ -45,34 +45,13 @@ class _AddParticipantState extends ConsumerState<AddParticipant> {
   @override
   Widget build(BuildContext context) {
     final groupId = ref.watch(selectedGroupIdProvider); 
-    // ✅ Get the selected group ID
-    print(groupId);
     return CustomScaffold(
       title: "Add Participant",
       content: CustomBody(
         content: Column(
           children: [
-            if (groupId != null)
-              Text("Adding participant to Group ID: $groupId"), // ✅ Show group ID for debugging
             const SizedBox(height: 20),
              ParticipantsList(),
-            const SizedBox(height: 20),
-             ElevatedButton(
-                onPressed: () {
-                  // Add your addGroup function logic here
-                   Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          GroupsScreen(),
-                    ),
-                  );
-                }, // ✅ Call addGroup function                
-                child: const Text("Done",style: TextStyle(color: Colors.white),),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 0, 208, 158),
-              ),
-            ),
           ],
         ),
       ),

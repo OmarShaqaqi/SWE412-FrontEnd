@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:senior_project/Providers/groups_provider.dart'; // Ensure correct import
 import 'package:senior_project/Providers/token_provider.dart';
+import 'package:senior_project/screens/groups/groups.dart';
 import "./dialog_utils.dart";
 
 class ParticipantsList extends ConsumerStatefulWidget {
@@ -14,8 +15,7 @@ class ParticipantsList extends ConsumerStatefulWidget {
 class _ParticipantsListState extends ConsumerState<ParticipantsList> {
   List<String> participants = [];
 
-  // ✅ Function to add a participant via API request
-  Future<void> addParticipant() async {
+  Future<void> checkParticipant() async {
     final groupId = ref.read(selectedGroupIdProvider); // ✅ Get selected groupId
     final token = ref.read(tokenProvider); // ✅ Get user token
 
@@ -30,19 +30,16 @@ class _ParticipantsListState extends ConsumerState<ParticipantsList> {
     if (participant == null) return; // If user cancels dialog, do nothing
 
     try {
-      final response = await http.post(
-        Uri.parse("http://10.0.2.2:8080/participants/add"), // Replace with actual API endpoint
+      final response = await http.get(
+        Uri.parse(
+            "http://10.0.2.2:8080/isuseravailable/$participant"), // Replace with actual API endpoint
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
         },
-        body: jsonEncode({
-          "group_id": groupId, // ✅ Send the selected group ID
-          "username": participant, // ✅ Send the entered username
-        }),
       );
 
-      if (response.statusCode == 200) {
+      if (response.body == true.toString()) {
         setState(() {
           participants.add(participant); // ✅ Add participant locally
         });
@@ -52,13 +49,15 @@ class _ParticipantsListState extends ConsumerState<ParticipantsList> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to add participant: ${response.body}")),
+          SnackBar(
+              content: Text("Failed to add participant: ${response.body}")),
         );
       }
     } catch (e) {
       print("Exception: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("An error occurred while adding participant")),
+        const SnackBar(
+            content: Text("An error occurred while adding participant")),
       );
     }
   }
@@ -69,60 +68,136 @@ class _ParticipantsListState extends ConsumerState<ParticipantsList> {
     });
   }
 
+  // ✅ Function to add a participant via API request
+  Future<void> addParticipant() async {
+    final groupId = ref.read(selectedGroupIdProvider); // ✅ Get selected groupId
+    final token = ref.read(tokenProvider); // ✅ Get user token
+
+    if (groupId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error: No group selected")),
+      );
+      return;
+    }
+    for (var i = 0; i < participants.length; i++) {
+      final participant = participants[i];
+      if (participant == null) return; // If user cancels dialog, do nothing
+      try {
+        final response = await http.post(
+          Uri.parse(
+              "http://10.0.2.2:8080/participants/add"), // Replace with actual API endpoint
+          headers: {
+            "Authorization": "Bearer $token",
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode({
+            "group_id": groupId, // ✅ Send the selected group ID
+            "username": participant, // ✅ Send the entered username
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          setState(() {
+            participants.add(participant); // ✅ Add participant locally
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("$participant added successfully!")),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text("Failed to add participant: ${response.body}")),
+          );
+        }
+      } catch (e) {
+        print("Exception: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text("An error occurred while adding participant")),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 191, 225, 195),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 223, 247, 226),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                onTap: addParticipant, // ✅ Call addParticipant function
-                child: const Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Participants",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+    return Column(
+      children: [
+        Container(
+          height: 400,
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 191, 225, 195),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 223, 247, 226),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: checkParticipant, // ✅ Call addParticipant function
+                    child: const Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Participants",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
+                        Icon(Icons.add),
+                      ],
                     ),
-                    Icon(Icons.add),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              SizedBox(
+                height: 200,
+                child: ListView.builder(
+                  itemCount: participants.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: const Icon(Icons.person, color: Colors.blue),
+                      title: Text(participants[index] ?? ""),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.remove, color: Colors.red),
+                        onPressed: () => removeParticipant(index),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-          SizedBox(
-            height: 200,
-            child: ListView.builder(
-              itemCount: participants.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: const Icon(Icons.person, color: Colors.blue),
-                  title: Text(participants[index] ?? ""),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.remove, color: Colors.red),
-                    onPressed: () => removeParticipant(index),
-                  ),
-                );
-              },
-            ),
+        ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            addParticipant();
+            // Add your addGroup function logic here
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => GroupsScreen(),
+              ),
+            );
+          }, // ✅ Call addGroup function
+          child: const Text(
+            "Done",
+            style: TextStyle(color: Colors.white),
           ),
-        ],
-      ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 0, 208, 158),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -37,10 +37,9 @@
 //         ],
 //       ),
 //     );
-    
+
 //   }
 // }
-
 
 // import 'package:flutter/material.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -88,7 +87,7 @@
 //           ),
 //         ],
 //       ),
-//     );  
+//     );
 // }
 // }
 
@@ -97,6 +96,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:senior_project/Providers/groups_provider.dart';
 import 'package:senior_project/Providers/token_provider.dart';
+import 'package:senior_project/models/participant_model.dart';
+import 'package:senior_project/widgets/dialog_utils.dart';
 import 'dart:convert';
 import './participant_row.dart';
 
@@ -121,7 +122,8 @@ class _MembersListState extends ConsumerState<MembersList> {
   /// Fetch participants with token authentication
   Future<void> fetchParticipants() async {
     final token = ref.read(tokenProvider); // Get the token
-    final groupId = ref.read(selectedGroupIdProvider); // Get the selected group ID
+    final groupId =
+        ref.read(selectedGroupIdProvider); // Get the selected group ID
 
     if (groupId == null) {
       print("No group selected");
@@ -175,7 +177,6 @@ class _MembersListState extends ConsumerState<MembersList> {
               Text("Spending"),
             ],
           ),
-
           if (isLoading)
             const Center(child: CircularProgressIndicator())
           else if (hasError)
@@ -186,7 +187,9 @@ class _MembersListState extends ConsumerState<MembersList> {
             // Display Leader
             ParticipantRow(
               phone: participants.first['phone'] ?? 'Unknown',
-              totalExpense: (participants.first['totalExpense'] as num?)?.toDouble() ?? 0.0,
+              totalExpense:
+                  (participants.first['totalExpense'] as num?)?.toDouble() ??
+                      0.0,
               isLeader: participants.first['isLeader'] ?? false,
             ),
             const SizedBox(height: 8),
@@ -198,10 +201,17 @@ class _MembersListState extends ConsumerState<MembersList> {
                 itemCount: participants.length - 1,
                 itemBuilder: (context, index) {
                   final participant = participants[index + 1]; // Skip leader
-                  return ParticipantRow(
-                    phone: participant['phone'] ?? 'Unknown',
-                    totalExpense: (participant['totalExpense'] as num?)?.toDouble() ?? 0.0,
-                    isLeader: participant['isLeader'] ?? false,
+                  return GestureDetector(
+                    onTap: () {
+                      participantInfo(context, Participant.fromJson(participant));
+                    },
+                    child: ParticipantRow(
+                      phone: participant['phone'] ?? 'Unknown',
+                      totalExpense:
+                          (participant['totalExpense'] as num?)?.toDouble() ??
+                              0.0,
+                      isLeader: participant['isLeader'] ?? false,
+                    ),
                   );
                 },
               ),
@@ -212,4 +222,3 @@ class _MembersListState extends ConsumerState<MembersList> {
     );
   }
 }
-
