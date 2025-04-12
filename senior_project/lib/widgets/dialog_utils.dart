@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/Providers/groups_provider.dart';
+import 'package:senior_project/models/expense_model.dart';
 import 'package:senior_project/models/participant_model.dart';
 import 'package:senior_project/screens/authentication/login.dart';
 import "../Providers/categories_provider.dart";
@@ -44,7 +45,8 @@ Future<void> showLogoutDialog(BuildContext context) {
                   onPressed: () {
                     Navigator.of(context).pop(); // Close dialog
                     print("Session ended");
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()));
 
                     // Add your logout logic here
                   },
@@ -313,7 +315,7 @@ Future<void> participantInfo(BuildContext context, Participant participant) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
-      return  AlertDialog(
+      return AlertDialog(
         backgroundColor: Colors.white,
         actionsAlignment: MainAxisAlignment.center,
         titlePadding: const EdgeInsets.all(16),
@@ -322,7 +324,7 @@ Future<void> participantInfo(BuildContext context, Participant participant) {
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        content:  Column(
+        content: Column(
           mainAxisSize:
               MainAxisSize.min, // Dynamically adapts to content height
           children: [
@@ -401,7 +403,7 @@ Future<void> participantInfo(BuildContext context, Participant participant) {
   );
 }
 
-Future<void> expenseDetails(BuildContext context) {
+Future<void> expenseDetails(BuildContext context, Expense expense) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -431,13 +433,13 @@ Future<void> expenseDetails(BuildContext context) {
                       alignment: Alignment.center,
                       width: 200,
                       height: 40,
-                      child: const Text("Name"),
                       decoration: const BoxDecoration(
                         color: const Color.fromARGB(255, 223, 247, 226),
                         borderRadius: BorderRadius.all(
                           Radius.circular(18.0),
                         ),
                       ),
+                      child: Text(expense.actor),
                     ),
                   ],
                 ),
@@ -457,7 +459,7 @@ Future<void> expenseDetails(BuildContext context) {
                           Radius.circular(18.0),
                         ),
                       ),
-                      child: const Text("Rent"),
+                      child: Text(expense.categoryName),
                     ),
                   ],
                 ),
@@ -477,7 +479,7 @@ Future<void> expenseDetails(BuildContext context) {
                           Radius.circular(18.0),
                         ),
                       ),
-                      child: const Text("\$130"),
+                      child: Text(expense.amount.toString()),
                     ),
                   ],
                 ),
@@ -497,7 +499,8 @@ Future<void> expenseDetails(BuildContext context) {
                           Radius.circular(18.0),
                         ),
                       ),
-                      child: const Text("11 Sep"),
+                      child: Text(
+                          "${expense.date.year}-${expense.date.month.toString().padLeft(2, '0')}-${expense.date.day.toString().padLeft(2, '0')}"),
                     ),
                   ],
                 ),
@@ -517,37 +520,30 @@ Future<void> expenseDetails(BuildContext context) {
                           Radius.circular(18.0),
                         ),
                       ),
-                      child: const Text("Approved"),
+                      child: Text(expense.status.toString()),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment
                       .start, // Aligns the TextField at the top
                   children: [
                     Text("Details"),
                     SizedBox(width: 10),
-                    Expanded(
-                      // Allow the TextField to take all remaining space in the Row
-                      child: SizedBox(
-                        height: 180, // Set the desired height for the TextField
-                        child: TextField(
-                          maxLines: null, // Allow multi-line input
-                          expands: true, // Make the TextField expand vertically
-                          decoration: InputDecoration(
-                            hintText: "Details...",
-                            filled: true,
-                            fillColor: Color.fromARGB(255, 223, 247, 226),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(18.0),
-                              ),
-                            ),
-                          ),
+                    Container(
+                      
+                      alignment: Alignment.center,
+                      width: 200,
+                      height: 200,
+                      decoration:  BoxDecoration(
+                        color: const Color.fromARGB(255, 223, 247, 226),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18.0),
                         ),
                       ),
+                      child: Text(expense.description),
                     ),
                   ],
                 ),
@@ -565,7 +561,7 @@ Future<void> expenseDetails(BuildContext context) {
                     ),
                   ),
                   child: const Text(
-                    "Save",
+                    "Close",
                     style: TextStyle(
                       color: Color.fromARGB(255, 9, 48, 48),
                     ),
@@ -600,7 +596,8 @@ Future<void> addExpenseDialog(
           return AlertDialog(
             backgroundColor: Colors.white,
             contentPadding: const EdgeInsets.all(16.0),
-            content: SingleChildScrollView( // ✅ Fix responsiveness
+            content: SingleChildScrollView(
+              // ✅ Fix responsiveness
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -629,7 +626,8 @@ Future<void> addExpenseDialog(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black),
                         color: const Color.fromARGB(255, 223, 247, 226),
-                        borderRadius: const BorderRadius.all(Radius.circular(18.0)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(18.0)),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -644,7 +642,6 @@ Future<void> addExpenseDialog(
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   const Text("Category"),
                   DropdownButtonFormField<String>(
                     value: selectedCategory,
@@ -656,10 +653,12 @@ Future<void> addExpenseDialog(
                       }
                     },
                     items: categories.isNotEmpty
-                        ? categories.map((category) => DropdownMenuItem(
-                              value: category,
-                              child: Text(category),
-                            )).toList()
+                        ? categories
+                            .map((category) => DropdownMenuItem(
+                                  value: category,
+                                  child: Text(category),
+                                ))
+                            .toList()
                         : [
                             const DropdownMenuItem(
                               value: null,
@@ -676,7 +675,6 @@ Future<void> addExpenseDialog(
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   const Text("Amount"),
                   TextFormField(
                     controller: amountController,
@@ -692,7 +690,6 @@ Future<void> addExpenseDialog(
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   const Text("Details"),
                   TextFormField(
                     controller: descriptionController,
@@ -707,7 +704,6 @@ Future<void> addExpenseDialog(
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   Center(
                     child: Column(
                       children: [
@@ -721,7 +717,8 @@ Future<void> addExpenseDialog(
                                   descriptionController.text.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text("Please fill all required fields"),
+                                    content:
+                                        Text("Please fill all required fields"),
                                     backgroundColor: Colors.red,
                                   ),
                                 );
@@ -729,7 +726,8 @@ Future<void> addExpenseDialog(
                               }
 
                               // ✅ Convert amount to BigDecimal format
-                              final double? amount = double.tryParse(amountController.text);
+                              final double? amount =
+                                  double.tryParse(amountController.text);
                               if (amount == null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -744,9 +742,11 @@ Future<void> addExpenseDialog(
                               final Map<String, dynamic> expenseData = {
                                 "groupId": groupId,
                                 "categoryName": selectedCategory,
-                                "amount": amount, // Backend expects BigDecimal (float in JSON)
+                                "amount":
+                                    amount, // Backend expects BigDecimal (float in JSON)
                                 "description": descriptionController.text,
-                                "date": "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}", // ✅ Fixed Date Format
+                                "date":
+                                    "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}", // ✅ Fixed Date Format
                               };
 
                               // ✅ Send API request to backend
@@ -766,23 +766,27 @@ Future<void> addExpenseDialog(
                                     backgroundColor: Colors.green,
                                   ),
                                 );
-                                Navigator.of(context).pop(); // ✅ Close dialog on success
+                                Navigator.of(context)
+                                    .pop(); // ✅ Close dialog on success
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text("Failed to add expense: ${response.body}"),
+                                    content: Text(
+                                        "Failed to add expense: ${response.body}"),
                                     backgroundColor: Colors.red,
                                   ),
                                 );
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromARGB(255, 0, 208, 158),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 0, 208, 158),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25.0),
                               ),
                             ),
-                            child: const Text("Save", style: TextStyle(color: Colors.black)),
+                            child: const Text("Save",
+                                style: TextStyle(color: Colors.black)),
                           ),
                         ),
                         SizedBox(
@@ -792,12 +796,14 @@ Future<void> addExpenseDialog(
                               Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromARGB(255, 0, 208, 158),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 0, 208, 158),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25.0),
                               ),
                             ),
-                            child: const Text("Cancel", style: TextStyle(color: Colors.black)),
+                            child: const Text("Cancel",
+                                style: TextStyle(color: Colors.black)),
                           ),
                         ),
                       ],
@@ -813,11 +819,8 @@ Future<void> addExpenseDialog(
   );
 }
 
-
-
-
 Future<void> addCategory(BuildContext context, WidgetRef ref) {
-   final TextEditingController _categoryController = TextEditingController();
+  final TextEditingController _categoryController = TextEditingController();
 
   return showDialog(
     context: context,
@@ -838,7 +841,7 @@ Future<void> addCategory(BuildContext context, WidgetRef ref) {
               mainAxisAlignment: MainAxisAlignment
                   .spaceEvenly, // Dynamically adapts to content height
               children: [
-                 TextField(
+                TextField(
                   controller: _categoryController,
                   decoration: InputDecoration(
                     hintText: "Category name",
@@ -858,7 +861,9 @@ Future<void> addCategory(BuildContext context, WidgetRef ref) {
 
                     if (categoryName.isNotEmpty) {
                       try {
-                        await ref.read(categoriesProvider.notifier).addCategory(categoryName);
+                        await ref
+                            .read(categoriesProvider.notifier)
+                            .addCategory(categoryName);
                         // Optionally, show a success message here.
                         Navigator.of(context).pop(); // Close the dialog
                       } catch (e) {

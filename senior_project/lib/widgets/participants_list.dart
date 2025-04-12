@@ -39,7 +39,7 @@ class _ParticipantsListState extends ConsumerState<ParticipantsList> {
         },
       );
 
-      if (response.body == true.toString()) {
+      if (response.body == true.toString() && !participants.contains(participant)) {
         setState(() {
           participants.add(participant); // ✅ Add participant locally
         });

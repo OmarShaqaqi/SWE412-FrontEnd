@@ -129,12 +129,17 @@ Widget build(BuildContext context) {
                   itemCount: filteredExpenses.length,
                   itemBuilder: (context, index) {
                     final expense = filteredExpenses[index];
-                    return ExpenseRow(
-                      expense: expense,
-                      isLeader: isLeader,
-                      onUpdateStatus: (expenseId, status) {
-                        _updateExpenseStatus(expenseId, status, jwtToken);
+                    return GestureDetector(
+                      onTap: () {
+                       expenseDetails(context, expense);
                       },
+                      child: ExpenseRow(
+                        expense: expense,
+                        isLeader: isLeader,
+                        onUpdateStatus: (expenseId, status) {
+                          _updateExpenseStatus(expenseId, status, jwtToken);
+                        },
+                      ),
                     );
                   },
                 ),

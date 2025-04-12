@@ -4,6 +4,8 @@ class Expense {
   final double amount;
   final String status; // ✅ Status is String (PENDING, APPROVED, REJECTED)
   final String categoryName;
+  final String actor;
+  final String description;
 
   Expense({
     required this.id,
@@ -11,6 +13,8 @@ class Expense {
     required this.amount,
     required this.status,
     required this.categoryName,
+    required this.actor ,
+    required this.description
   });
 
   factory Expense.fromJson(Map<String, dynamic> json) {
@@ -20,6 +24,8 @@ class Expense {
       amount: (json['amount'] as num).toDouble(),
       status: (json['status'] != null) ? (json['status'] as String) : "no", // ✅ Keep status as String
       categoryName: json['categoryName'] as String,
+      actor: json['actor'] as String,
+      description: json['description'] as String
     );
   }
 
