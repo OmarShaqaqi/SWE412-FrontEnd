@@ -1,69 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:senior_project/models/expense_model.dart';
 import 'package:senior_project/templates/custom_scaffold.dart';
 import 'package:senior_project/templates/transaction_body.dart';
 import 'package:senior_project/widgets/calendar_dialog.dart';
 import 'package:senior_project/widgets/expense_details_dialog.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:senior_project/Providers/token_provider.dart';
 
-class TransactionPage extends StatefulWidget {
+
+class TransactionPage extends ConsumerStatefulWidget {
   const TransactionPage({super.key});
 
   @override
-  State<TransactionPage> createState() => _TransactionPageState();
+  ConsumerState<TransactionPage> createState() => _TransactionPageState();
 }
 
-class _TransactionPageState extends State<TransactionPage> {
+class _TransactionPageState extends ConsumerState<TransactionPage> {
   DateTime? _selectedDate;
-  List<TransactionItem> allTransactions = [
-    TransactionItem(
-      date: DateTime(2024, 11, 5, 9, 15),
-      category: Category.groceries,
-      group: 'Family',
-      amount: -150.00,
-    ),
-    TransactionItem(
-      date: DateTime(2024, 12, 20, 12, 30),
-      category: Category.rent,
-      group: 'Shared',
-      amount: -700.00,
-    ),
-    TransactionItem(
-      date: DateTime(2024, 4, 24, 17, 0),
-      category: Category.transport,
-      group: 'Personal',
-      amount: -45.00,
-    ),
-    TransactionItem(
-      date: DateTime(2024, 4, 15, 8, 30),
-      category: Category.food,
-      group: 'Personal',
-      amount: -25.50,
-    ),
-    TransactionItem(
-      date: DateTime(2025, 1, 10, 14, 0),
-      category: Category.medical,
-      group: 'Family',
-      amount: -120.00,
-    ),
-    TransactionItem(
-      date: DateTime(2025, 2, 14, 19, 45),
-      category: Category.movie,
-      group: 'Entertainment',
-      amount: -50.00,
-    ),
-  ];
+  // List<Expense> allExpense = [];
+  List<Expense> allExpense = [];
 
-  void _openCalendar() async {
-    final selectedDate = await showDialog<DateTime>(
-      context: context,
-      builder: (context) => const CalendarDialog(),
-    );
-    if (selectedDate != null) {
-      setState(() => _selectedDate = selectedDate);
-    }
+  @override
+  void initState() {
+    super.initState();
+    _initializeExpenses();
   }
 
-  List<TransactionItem> get filteredTransactions {
-    final filtered = allTransactions.where((t) {
+  Future<void> _initializeExpenses() async {
+    final expenses = await _fetchExpensesByDate(DateTime.now().toString());
+    setState(() {
+      allExpense = expenses;
+    });
+  }
+  // groups/personal
+
+void _openCalendar() async {
+  final selectedDateString = await showDialog<String>(
+    context: context,
+    builder: (context) => const CalendarDialog(),
+  );
+
+  if (selectedDateString != null) {
+    final date = DateFormat('yyyy-MM-dd').format(DateTime.parse(selectedDateString)); // keep as DateTime
+    final expenses = await _fetchExpensesByDate(selectedDateString);
+    setState(() {
+      // _selectedDate = date;
+      allExpense = expenses;
+    });
+  }
+}
+Future<List<Expense>> _fetchExpensesByDate(String date) async {
+  final token = ref.read(tokenProvider);
+  final url = Uri.parse('http://10.0.2.2:8080/expenses/date/$date'); // Replace with your real API
+  final response = await http.get(    
+    url,
+    headers: {
+      'Authorization': 'Bearer $token',
+    },
+    );
+
+  if (response.statusCode == 200) {
+    final List<dynamic> data = jsonDecode(response.body);
+    return data.map((json) => Expense.fromJson(json)).toList();
+  } else {
+    throw Exception('Failed to load expenses');
+  }
+}
+
+
+
+  List<Expense> get filteredTransactions {
+    final filtered = allExpense.where((t) {
       final bool dateMatch = _selectedDate == null ? true :
       (_selectedDate!.day == 1
           ? t.date.month == _selectedDate!.month && t.date.year == _selectedDate!.year
@@ -75,8 +85,8 @@ class _TransactionPageState extends State<TransactionPage> {
     return filtered;
   }
 
-  Map<String, List<TransactionItem>> _groupTransactions() {
-    final Map<String, List<TransactionItem>> groups = {};
+  Map<String, List<Expense>> _groupTransactions() {
+    final Map<String, List<Expense>> groups = {};
     for (final transaction in filteredTransactions) {
       final key = _selectedDate?.day == 1 || _selectedDate == null
           ? '${_getMonthName(transaction.date.month)} ${transaction.date.year}'
@@ -107,7 +117,7 @@ class _TransactionPageState extends State<TransactionPage> {
               ...transactionGroups.entries.map((entry) {
                 return _buildTransactionSection(
                   title: entry.key,
-                  transactions: entry.value,
+                  allexpenses: entry.value,
                 );
               }),
             ],
@@ -119,7 +129,7 @@ class _TransactionPageState extends State<TransactionPage> {
 
   Widget _buildTransactionSection({
     required String title,
-    required List<TransactionItem> transactions,
+    required List<Expense> allexpenses,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,23 +155,13 @@ class _TransactionPageState extends State<TransactionPage> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.zero,
-            itemCount: transactions.length,
+            itemCount: allexpenses.length,
             separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, index) {
-              final transaction = transactions[index];
+              final expense = allexpenses[index];
               return ListTile(
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => ExpenseDetailsDialog(
-                    transaction: transaction,
-                    onSave: (updatedTransaction) {
-                      setState(() {
-                        final index = allTransactions.indexOf(transaction);
-                        allTransactions[index] = updatedTransaction;
-                      });
-                    },
-                  ),
-                ),
+                onTap: () => (),
+                
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 8,
@@ -169,7 +169,7 @@ class _TransactionPageState extends State<TransactionPage> {
                 leading: Padding(
                   padding: const EdgeInsets.only(left: 8),
                   child: Image.asset(
-                    _getIconForCategory(transaction.category),
+                    ("assets/salary_pressed.png"),
                     width: 60,
                     height: 60,
                   ),
@@ -177,7 +177,7 @@ class _TransactionPageState extends State<TransactionPage> {
                 title: Padding(
                   padding: const EdgeInsets.only(left: 8),
                   child: Text(
-                    transaction.category.displayName,
+                    expense.categoryName,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -187,7 +187,7 @@ class _TransactionPageState extends State<TransactionPage> {
                 subtitle: Padding(
                   padding: const EdgeInsets.only(left: 8),
                   child: Text(
-                    _formatTime(transaction.date),
+                    _formatTime(expense.date),
                     style: const TextStyle(
                       color: Color.fromARGB(255, 0, 104, 255),
                       fontWeight: FontWeight.bold,
@@ -202,7 +202,7 @@ class _TransactionPageState extends State<TransactionPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          transaction.group,
+                          expense.categoryName,
                           style: TextStyle(
                             color: Colors.grey.shade600,
                             fontWeight: FontWeight.bold,
@@ -219,7 +219,7 @@ class _TransactionPageState extends State<TransactionPage> {
                             ),
                             const SizedBox(width: 5),
                             Text(
-                              '- ${transaction.amount.abs().toStringAsFixed(2)}',
+                              '- ${expense.amount.abs().toStringAsFixed(2)}',
                               style: TextStyle(
                                 color: const Color.fromARGB(255, 0, 104, 255),
                                 fontWeight: FontWeight.bold,
@@ -243,7 +243,8 @@ class _TransactionPageState extends State<TransactionPage> {
   }
 
   String _formatTime(DateTime date) {
-    return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+    //'${date.day.toString().padLeft(2, '0')}:${date.month.toString().padLeft(2, '0')}';
+    return DateFormat('d MMMM yyyy').format(date); 
   }
 
   String _getMonthName(int month) {
@@ -254,63 +255,35 @@ class _TransactionPageState extends State<TransactionPage> {
     ][month - 1];
   }
 
-  String _getIconForCategory(Category category) {
-    switch (category) {
-      case Category.salary:
-        return 'assets/salary_pressed.png';
-      case Category.groceries:
-        return 'assets/groc_pressed.png';
-      case Category.rent:
-        return 'assets/rent_pressed.png';
-      case Category.transport:
-        return 'assets/transport_pressed.png';
-      case Category.food:
-        return 'assets/food_pressed.png';
-      case Category.travel:
-        return 'assets/travel_pressed.png';
-      case Category.medical:
-        return 'assets/med_pressed.png';
-      case Category.movie:
-        return 'assets/movie_pressed.png';
-      case Category.wedding:
-        return 'assets/wedding_pressed.png';
-      case Category.gift:
-        return 'assets/gift_pressed.png';
-      case Category.house:
-        return 'assets/house_pressed.png';
-    }
-  }
+  
 }
 
-enum Category {
-  salary('Salary'),
-  groceries('Groceries'),
-  rent('Rent'),
-  transport('Transport'),
-  food('Food'),
-  travel('Travel'),
-  medical('Medical'),
-  movie('Movie'),
-  wedding('Wedding'),
-  gift('Gift'),
-  house('House');
 
-  final String displayName;
-  const Category(this.displayName);
-}
-
-class TransactionItem {
-  final DateTime date;
-  final Category category;
-  final String group;
-  final double amount;
-  final String? details;
-
-  const TransactionItem({
-    required this.date,
-    required this.category,
-    required this.group,
-    required this.amount,
-    this.details,
-  });
-}
+    // Expense(
+    //   id: 0,
+    //   status: "Approved",
+    //   date: DateTime(2025, 2, 1),
+    //   categoryName: "asdf",
+    //   actor: 'Group A',
+    //   amount: 1000.0,
+    //   description: 'Salary for the month',
+    // ),
+    
+    // Expense(
+    //   id: 1,
+    //   status: "Pending",
+    //   date: DateTime.now(),
+    //   categoryName: "Groceries",
+    //   actor: 'Group B',
+    //   amount: 200.0,
+    //   description: 'Weekly groceries',
+    // ),
+    // Expense(
+    //   id: 2,
+    //   status: "Rejected",
+    //   date: DateTime.now(),
+    //   categoryName: "Rent",
+    //   actor: 'Group C',
+    //   amount: 1500.0,
+    //   description: 'Monthly rent payment',
+    // ),

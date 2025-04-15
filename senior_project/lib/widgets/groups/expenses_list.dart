@@ -113,56 +113,61 @@ Widget build(BuildContext context) {
         .toList();
   }
 
-  return Padding(
-    padding: const EdgeInsets.only(top: 16.0, right: 8, left: 8),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text(
-          "Submitted Expenses",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        Expanded(
-          child: filteredExpenses.isEmpty
-              ? const Center(child: Text("No expenses found"))
-              : ListView.builder(
-                  itemCount: filteredExpenses.length,
-                  itemBuilder: (context, index) {
-                    final expense = filteredExpenses[index];
-                    return GestureDetector(
-                      onTap: () {
-                       expenseDetails(context, expense);
-                      },
-                      child: ExpenseRow(
-                        expense: expense,
-                        isLeader: isLeader,
-                        onUpdateStatus: (expenseId, status) {
-                          _updateExpenseStatus(expenseId, status, jwtToken);
-                        },
-                      ),
-                    );
-                  },
-                ),
-        ),
-        const SizedBox(height: 16),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 0, 208, 158),
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+  return RefreshIndicator(
+    onRefresh: () async {
+      ref.refresh(expensesProvider.notifier).fetchExpenses(groupId);
+    },
+    child: Padding(
+      padding: const EdgeInsets.only(top: 16.0, right: 8, left: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text(
+            "Submitted Expenses",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          onPressed: () {
-            _showAddExpenseDialog(jwtToken, groupId, categories);
-          },
-          child: const Text(
-            "Add Expense",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+          Expanded(
+            child: filteredExpenses.isEmpty
+                ? const Center(child: Text("No expenses found"))
+                : ListView.builder(
+                    itemCount: filteredExpenses.length,
+                    itemBuilder: (context, index) {
+                      final expense = filteredExpenses[index];
+                      return GestureDetector(
+                        onTap: () {
+                         expenseDetails(context, expense);
+                        },
+                        child: ExpenseRow(
+                          expense: expense,
+                          isLeader: isLeader,
+                          onUpdateStatus: (expenseId, status) {
+                            _updateExpenseStatus(expenseId, status, jwtToken);
+                          },
+                        ),
+                      );
+                    },
+                  ),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 0, 208, 158),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+            ),
+            onPressed: () {
+              _showAddExpenseDialog(jwtToken, groupId, categories);
+            },
+            child: const Text(
+              "Add Expense",
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

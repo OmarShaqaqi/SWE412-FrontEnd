@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/models/expense_model.dart';
+import 'package:senior_project/widgets/price_widget.dart';
 
 class ExpenseRow extends StatelessWidget {
   final Expense expense;
@@ -50,10 +51,11 @@ class ExpenseRow extends StatelessWidget {
                   "Participant",
                   style: TextStyle(fontSize: textSize, fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  "\$${expense.amount.toStringAsFixed(2)}",
-                  style: TextStyle(fontSize: textSize * 0.9, color: Colors.blue, fontWeight: FontWeight.bold),
-                ),
+                // Text(
+                //   "\$${expense.amount.toStringAsFixed(2)}",
+                //   style: TextStyle(fontSize: textSize * 0.9, color: Colors.blue, fontWeight: FontWeight.bold),
+                // ),
+                PriceWidget(price: expense.amount, size: 15,),
               ],
             ),
           ),

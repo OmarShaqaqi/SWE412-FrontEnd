@@ -313,7 +313,8 @@ void initState() {
                                       'Fri',
                                       'Sat'
                                     ];
-                                    return Text(days[value.toInt()]);
+                                    // return Text(days[value.toInt()]);
+                                    return Text(days[value.toInt().clamp(0, 6)]);
                 
                                   case 1: // Monthly
                                     const months = [

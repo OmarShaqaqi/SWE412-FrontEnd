@@ -24,8 +24,8 @@ class Expense {
       amount: (json['amount'] as num).toDouble(),
       status: (json['status'] != null) ? (json['status'] as String) : "no", // ✅ Keep status as String
       categoryName: json['categoryName'] as String,
-      actor: json['actor'] as String,
-      description: json['description'] as String
+      actor: (json['actor'] ?? '') as String,
+      description: (json['description'] ?? '') as String,
     );
   }
 

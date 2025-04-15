@@ -17,86 +17,91 @@ class GroupsScreen extends ConsumerWidget {
     return CustomScaffold(
       title: "Groups",
       content: CustomBodyGroup(
-        content: GridView.builder(
-          itemCount: groups.length + 1,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-          ),
-          itemBuilder: (context, index) {
-            if (index == groups.length) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const AddGroup()),
-                  );
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      "Add New",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              return GestureDetector(
-                onTap: () async{
-                  ref.read(selectedGroupIdProvider.notifier).state = groups[index].id;
-                  String groupId = groups[index].id.toString();
-                  // Call loadUserRole to load the user's role in the group
-                  await ref.read(userRoleProvider.notifier).loadUserRole(groupId);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          GroupItemScreen(name: groups[index].name),
-                    ),
-                  );
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,                         
-                        children: [
-                          Icon(Icons.group, size: 40, color: Colors.white),
-                          Text(groups[index].name,style: TextStyle(color: Colors.white),),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
+        content: RefreshIndicator(
+          onRefresh: () async {
+            ref.refresh(groupsProvider);
           },
+          child: GridView.builder(
+            itemCount: groups.length + 1,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+            ),
+            itemBuilder: (context, index) {
+              if (index == groups.length) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AddGroup()),
+                    );
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        "Add New",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return GestureDetector(
+                  onTap: () async{
+                    ref.read(selectedGroupIdProvider.notifier).state = groups[index].id;
+                    String groupId = groups[index].id.toString();
+                    // Call loadUserRole to load the user's role in the group
+                    await ref.read(userRoleProvider.notifier).loadUserRole(groupId);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            GroupItemScreen(name: groups[index].name),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,                         
+                          children: [
+                            Icon(Icons.group, size: 40, color: Colors.white),
+                            Text(groups[index].name,style: TextStyle(color: Colors.white),),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
+          ),
         ),
       ),
     );

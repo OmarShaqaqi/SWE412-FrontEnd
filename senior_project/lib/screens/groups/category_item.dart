@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:senior_project/Providers/categories_provider.dart';
 import 'package:senior_project/Providers/expenses_provider.dart';
 import 'package:senior_project/Providers/groups_provider.dart';
-import 'package:senior_project/templates/custom_body_group.dart';
+import 'package:senior_project/templates/custom_body_groupItem.dart';
 import 'package:senior_project/templates/custom_scaffold.dart';
 import 'package:senior_project/Providers/token_provider.dart';
 import 'package:senior_project/widgets/groups/specific_category_expense_row.dart';
@@ -77,7 +77,7 @@ class _CategoryItemState extends ConsumerState<CategoryItemScreen> {
     );
     return CustomScaffold(
       title: widget.title,
-      content: CustomBodyGroup(content: content),
+      content: CustomBodyGroupItem(content: content),
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
+
 
 class CalendarDialog extends StatefulWidget {
   const CalendarDialog({super.key});
@@ -43,6 +45,8 @@ class _CalendarDialogState extends State<CalendarDialog> {
                   setState(() {
                     _selectedDate = selectedDay;
                     _focusedDay = focusedDay;
+                    String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate!);
+                    print(formattedDate); // e.g., 2025-04-14
                   });
                 },
                 headerStyle: const HeaderStyle(
@@ -84,7 +88,7 @@ class _CalendarDialogState extends State<CalendarDialog> {
                     ),
                     onPressed: () {
                       Navigator.pop(context,
-                          DateTime(_focusedDay.year, _focusedDay.month, 1));
+                          DateFormat('yyyy-MM-dd').format(_selectedDate!));
                     },
                     child: const Text('Select Month/Year'),
                   ),

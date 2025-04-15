@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import for date formatting
-import 'package:senior_project/models/expense_model.dart';// Ensure this path is correct
+import 'package:senior_project/models/expense_model.dart';
+import 'package:senior_project/widgets/price_widget.dart';// Ensure this path is correct
 
 class SpecificCategoryExpenseRow extends StatelessWidget {
   final Expense expense; // 🔹 Add Expense parameter
@@ -54,14 +55,15 @@ class SpecificCategoryExpenseRow extends StatelessWidget {
           ),
 
           // 🔹 Expense Amount
-          Text(
-            "SAR ${expense.amount.toStringAsFixed(2)}", // Format as currency
-            style: const TextStyle(
-              fontSize: 18,
-              color: Colors.blue,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          // Text(
+          //   "SAR ${expense.amount.toStringAsFixed(2)}", // Format as currency
+          //   style: const TextStyle(
+          //     fontSize: 18,
+          //     color: Colors.blue,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
+          PriceWidget(price: expense.amount), // Use PriceWidget for formatted price
         ],
       ),
     );

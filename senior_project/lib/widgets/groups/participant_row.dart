@@ -109,6 +109,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:senior_project/widgets/price_widget.dart';
 
 class ParticipantRow extends StatelessWidget {
   final String phone;
@@ -156,10 +157,11 @@ class ParticipantRow extends StatelessWidget {
           ),
 
           // Total Expense
-          Text(
-            "SAR ${totalExpense.toStringAsFixed(2)}",
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
-          ),
+          // Text(
+          //   "SAR ${totalExpense.toStringAsFixed(2)}",
+          //   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
+          // ),
+          PriceWidget(price: totalExpense)
         ],
       ),
     );

@@ -4,17 +4,18 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:senior_project/Providers/token_provider.dart';
 import 'package:senior_project/widgets/price_widget.dart';
+import 'package:senior_project/Providers/groups_provider.dart';
 
-class  CustomBodyAnalysis extends ConsumerStatefulWidget {
+class CustomBodyGroupItem extends ConsumerStatefulWidget {
   final Widget content;
 
-  const  CustomBodyAnalysis({super.key, required this.content});
+  const CustomBodyGroupItem({super.key, required this.content});
 
   @override
-  ConsumerState< CustomBodyAnalysis> createState() => _CustomBodyGroupState();
+  ConsumerState<CustomBodyGroupItem> createState() => _CustomBodyGroupState();
 }
 
-class _CustomBodyGroupState extends ConsumerState<CustomBodyAnalysis> {
+class _CustomBodyGroupState extends ConsumerState<CustomBodyGroupItem> {
   double budget = 0;
   double expenses = 0;
   bool isLoading = true;
@@ -28,7 +29,8 @@ class _CustomBodyGroupState extends ConsumerState<CustomBodyAnalysis> {
   Future<void> _fetchGroupData() async {
     try {
       final token = ref.read(tokenProvider);
-      final url = Uri.parse('http://10.0.2.2:8080/groups/personal');
+      final selectedGroupId = ref.read(selectedGroupIdProvider);
+      final url = Uri.parse('http://10.0.2.2:8080/groups/$selectedGroupId');
       final response = await http.get(
         url,
         headers: {'Authorization': 'Bearer $token'},
@@ -147,10 +149,10 @@ class _CustomBodyGroupState extends ConsumerState<CustomBodyAnalysis> {
           child: Container(
             margin: const EdgeInsets.only(top: 10),
             padding: const EdgeInsets.only(
-              top: 10,
+              top: 32,
               left: 16,
               right: 16,
-              bottom: 2,
+              bottom: kBottomNavigationBarHeight,
             ),
             decoration: const BoxDecoration(
               color: Color.fromARGB(255, 241, 255, 243),

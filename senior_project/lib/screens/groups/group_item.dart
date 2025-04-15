@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:senior_project/Providers/users_provider.dart';
 import 'package:senior_project/templates/custom_body_group.dart';
+import 'package:senior_project/templates/custom_body_groupItem.dart';
 import 'package:senior_project/templates/custom_scaffold.dart';
 import 'package:senior_project/widgets/groups/expenses_list.dart';
 import 'package:senior_project/widgets/groups/categories_list.dart';
@@ -43,7 +44,7 @@ class _GroupItemScreenState extends ConsumerState<GroupItemScreen> {
 
     return CustomScaffold(
       title: widget.name,
-      content: CustomBodyGroup(
+      content: CustomBodyGroupItem(
         content: Column(
           mainAxisSize: MainAxisSize.max,
           children: [

@@ -675,13 +675,22 @@ Future<void> addExpenseDialog(
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text("Amount"),
+                  Row(
+                    children: [
+                      const Text("Amount"),
+                      SizedBox(width: 10),
+                      Image.asset(
+                          'assets/Saudi_Riyal_Symbol.png',
+                          height: 15, // Adjust symbol size relative to text
+                        ),
+                    ],
+                  ),
                   TextFormField(
                     controller: amountController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       labelText: "Amount",
-                      prefixText: "\$",
+                      
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
