@@ -126,7 +126,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 leading: const Icon(Icons.logout, color: Colors.blue),
                 title: const Text("Logout"),
                 onTap: () {
-                  showLogoutDialog(context);
+                  showLogoutDialog(context,ref);
                 },
               ),
             ],

@@ -112,6 +112,8 @@ class _ParticipantsListState extends ConsumerState<ParticipantsList> {
         }
       } catch (e) {
         print("Exception: $e");
+        
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text("An error occurred while adding participant")),
@@ -182,6 +184,7 @@ class _ParticipantsListState extends ConsumerState<ParticipantsList> {
           onPressed: () {
             addParticipant();
             // Add your addGroup function logic here
+            Navigator.pop(context); // Close the dialog
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(

@@ -7,6 +7,7 @@ import 'package:senior_project/templates/custom_scaffold.dart';
 import 'package:senior_project/widgets/groups/expenses_list.dart';
 import 'package:senior_project/widgets/groups/categories_list.dart';
 import 'package:senior_project/widgets/groups/expenses_list.dart';
+import 'package:senior_project/widgets/groups/groub_modification.dart';
 import '../../widgets/groups/members_list.dart';
 import '../../widgets/groups/categories_list.dart';
 import 'package:senior_project/Providers/participants_provider.dart';
@@ -39,6 +40,9 @@ class _GroupItemScreenState extends ConsumerState<GroupItemScreen> {
         MembersList(),
         CategoriesList(),
         ExpensesList(),
+        isLeader
+            ? const GroupModificationWidget()
+            : const Text("You are not a group leader"),
       ],
     );
 
@@ -63,7 +67,7 @@ class _GroupItemScreenState extends ConsumerState<GroupItemScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
-                  3, // Number of screens
+                  4, // Number of screens
                   (index) => AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     margin: const EdgeInsets.symmetric(horizontal: 4),

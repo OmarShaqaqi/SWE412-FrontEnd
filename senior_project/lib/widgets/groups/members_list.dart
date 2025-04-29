@@ -96,7 +96,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:senior_project/Providers/groups_provider.dart';
 import 'package:senior_project/Providers/token_provider.dart';
+import 'package:senior_project/Providers/users_provider.dart';
 import 'package:senior_project/models/participant_model.dart';
+import 'package:senior_project/screens/groups/add_participant.dart';
 import 'package:senior_project/widgets/dialog_utils.dart';
 import 'dart:convert';
 import './participant_row.dart';
@@ -165,6 +167,7 @@ class _MembersListState extends ConsumerState<MembersList> {
 
   @override
   Widget build(BuildContext context) {
+    final isLeader = ref.watch(userRoleProvider);
     return Padding(
       padding: const EdgeInsets.only(top: 16.0, right: 8, left: 8),
       child: Column(
@@ -193,8 +196,27 @@ class _MembersListState extends ConsumerState<MembersList> {
               isLeader: participants.first['isLeader'] ?? false,
             ),
             const SizedBox(height: 8),
-            const Text("Members"),
-
+            Row(
+              children: [
+                const Text("Members"),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.60),
+                if (isLeader)
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AddParticipant(),
+                        ),
+                      );
+                    },
+                  )
+                else
+                  const SizedBox.shrink(),
+              ],
+            ),
             // Display Other Members
             Expanded(
               child: ListView.builder(
@@ -203,7 +225,21 @@ class _MembersListState extends ConsumerState<MembersList> {
                   final participant = participants[index + 1]; // Skip leader
                   return GestureDetector(
                     onTap: () {
-                      participantInfo(context, Participant.fromJson(participant));
+                      final isLeader = ref.watch(userRoleProvider);
+
+                      if (isLeader) {
+                        // Show participant info only if the user is a leader
+                        participantInfoWithDelete(
+                            context,
+                            Participant.fromJson(participant),
+                            ref.read(selectedGroupIdProvider)?.toInt() ?? 0,
+                            ref,
+                            fetchParticipants);
+                      } else {
+                        // Show participant info for all users
+                        participantInfo(
+                            context, Participant.fromJson(participant));
+                      }
                     },
                     child: ParticipantRow(
                       phone: participant['phone'] ?? 'Unknown',

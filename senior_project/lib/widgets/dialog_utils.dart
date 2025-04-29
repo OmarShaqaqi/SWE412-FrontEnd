@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/Providers/groups_provider.dart';
+import 'package:senior_project/Providers/token_provider.dart';
 import 'package:senior_project/models/expense_model.dart';
 import 'package:senior_project/models/participant_model.dart';
 import 'package:senior_project/screens/authentication/login.dart';
@@ -9,7 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future<void> showLogoutDialog(BuildContext context) {
+Future<void> showLogoutDialog(BuildContext context, dynamic ref) {
+  final token = ref.read(tokenProvider);
   return showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -43,10 +45,12 @@ Future<void> showLogoutDialog(BuildContext context) {
                 height: 60,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close dialog
+                    
                     print("Session ended");
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()));
+                    ref.read(tokenProvider.notifier).removeToken(); // Remove the token from the provider
+                    Navigator.pushAndRemoveUntil(context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                        (Route<dynamic> route) => false);
 
                     // Add your logout logic here
                   },
@@ -116,8 +120,8 @@ Future<String?> addParticipantDialog(BuildContext context) {
             textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          content: Container(
-            height: 180,
+          content: SingleChildScrollView(
+            
             child: Column(children: [
               const Text(
                 "Participant:",
@@ -402,6 +406,153 @@ Future<void> participantInfo(BuildContext context, Participant participant) {
     },
   );
 }
+
+
+Future<void> participantInfoWithDelete(BuildContext context, Participant participant, int groupId, WidgetRef ref, VoidCallback onDeleted) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: Colors.white,
+        actionsAlignment: MainAxisAlignment.center,
+        titlePadding: const EdgeInsets.all(16),
+        title: const Text(
+          "Participant Information",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Column(
+          mainAxisSize:
+              MainAxisSize.min, // Dynamically adapts to content height
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("Phone"),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 200,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: participant.phone,
+                      filled: true,
+                      fillColor: const Color.fromARGB(255, 223, 247, 226),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("Paid"),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 200,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: participant.totalExpense.toString(),
+                      filled: true,
+                      fillColor: const Color.fromARGB(255, 223, 247, 226),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("isLeader"),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 200,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: participant.isLeader.toString(),
+                      filled: true,
+                      fillColor: const Color.fromARGB(255, 223, 247, 226),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ElevatedButton(
+            onPressed: () async {
+                  try {
+                    final token = ref.read(tokenProvider);
+                    final url = Uri.parse('http://10.0.2.2:8080/participants/deleteParticipant?groupId=$groupId&participant_phone=${participant.phone}');
+
+                    final response = await http.get(
+                      url,
+                      headers: {
+                        'Authorization': 'Bearer $token',
+                        'Content-Type': 'application/json',
+                      },
+                      
+                    );
+
+                    if (response.statusCode == 200) {
+                      onDeleted();
+                      Navigator.of(context).pop(); // Close dialog
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Participant deleted successfully')),
+                      );
+                      print("Participant deleted");
+                    } else {
+                      Navigator.of(context).pop(); // Close dialog
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to delete: ${response.body}')),
+                      );
+                      print("Failed to delete participant: ${response.body}");
+                    }
+                  } catch (e) {
+                    Navigator.of(context).pop(); // Close dialog
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error: $e')),
+                    );
+                    print("Error deleting participant: $e");
+                  }
+                },
+
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 0, 208, 158),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 10, horizontal: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+              ),
+              child: const Text(
+                "Delete Participant",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 9, 48, 48),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 
 Future<void> expenseDetails(BuildContext context, Expense expense) {
   return showDialog(

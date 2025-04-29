@@ -67,7 +67,7 @@ class LoginScreen extends ConsumerWidget {
             children: [   
               const SizedBox(height: 5),               
               const Text(
-                "Username or Email",
+                "Phone Number",
                 style: TextStyle(color: Colors.black),
                 textAlign: TextAlign.left,
               ),

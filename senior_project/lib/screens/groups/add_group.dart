@@ -7,7 +7,6 @@ import 'package:senior_project/Providers/token_provider.dart';
 import "package:senior_project/templates/custom_body.dart";
 import "package:senior_project/templates/custom_scaffold.dart";
 
-
 class AddGroup extends ConsumerStatefulWidget {
   const AddGroup({super.key});
 
@@ -35,14 +34,14 @@ class _AddGroupState extends ConsumerState<AddGroup> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Group added successfully!")),
       );
-                        Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          AddParticipant(),
-                    ),
-                  );
-
+      Navigator.pop(context); // Go back to the previous screen
+      ref.refresh(groupsProvider); // Refresh the groups list
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddParticipant(),
+        ),
+      );
 
       // ✅ Go back to GroupsScreen after adding
     } catch (e) {
@@ -58,8 +57,15 @@ class _AddGroupState extends ConsumerState<AddGroup> {
       children: [
         Form(
           child: Column(
+            
             children: [
-              const Text("Group name"),
+              const Text("Group name",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: groupNameController,
                 decoration: const InputDecoration(
@@ -72,12 +78,29 @@ class _AddGroupState extends ConsumerState<AddGroup> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text("Budget"),
+              Row(
+                    children: [
+                      SizedBox(width: 10),
+                      const Text("Bugget",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      
+                      SizedBox(width: 10),
+                      Image.asset(
+                          'assets/Saudi_Riyal_Symbol.png',
+                          height: 15, // Adjust symbol size relative to text
+                        ),
+                    ],
+                  ),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: budgetController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  hintText: "\$8000",
+                  hintText: "Group Budget",
                   filled: true,
                   fillColor: Color.fromARGB(255, 223, 247, 226),
                   border: OutlineInputBorder(
@@ -88,10 +111,13 @@ class _AddGroupState extends ConsumerState<AddGroup> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: addGroup, // ✅ Call addGroup function
-                child: const Text("Add Group",style: TextStyle(color: Colors.white),),
+                child: const Text(
+                  "Add Group",
+                  style: TextStyle(color: Colors.white),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 0, 208, 158),
-              ),                
+                ),
               ),
             ],
           ),
