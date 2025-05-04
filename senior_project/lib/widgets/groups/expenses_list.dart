@@ -158,7 +158,13 @@ Widget build(BuildContext context) {
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
             ),
             onPressed: () {
-              _showAddExpenseDialog(jwtToken, groupId, categories);
+              if (categoriesState.isNotEmpty) {
+                _showAddExpenseDialog(jwtToken, groupId, categories);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("No categories available")),
+                );
+              }
             },
             child: const Text(
               "Add Expense",

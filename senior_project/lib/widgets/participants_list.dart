@@ -185,7 +185,7 @@ class _ParticipantsListState extends ConsumerState<ParticipantsList> {
           onPressed: () {
             addParticipant();
             // Add your addGroup function logic here
-            Navigator.pop(context); // Close the dialog
+             // Close the dialog
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(

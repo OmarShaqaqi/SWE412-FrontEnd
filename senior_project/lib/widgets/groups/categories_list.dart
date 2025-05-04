@@ -37,81 +37,77 @@ class _CategoriesListState extends ConsumerState<CategoriesList> {
     final isLoading = ref.read(categoriesProvider.notifier).isLoading;
     
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        if (groupId != null) {
-          await ref.read(categoriesProvider.notifier).fetchCategories(groupId);
-        }
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text(
-            "Categories",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,),
-          ),
-          SizedBox(height: 16),
-          Expanded(
-            child: isLoading
-                ? const Center(child: CircularProgressIndicator()) // Show loader while fetching
-                : categoriesState.isEmpty
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "No categories found",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 16),
-                          if (isLeader) _buildAddCategoryButton(context, ref), // Show add button only for leaders
-                        ],
-                      )
-                    : GridView.builder(
-                        itemCount: isLeader ? categoriesState.length + 1 : categoriesState.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-                        itemBuilder: (context, index) {
-                          if (index == categoriesState.length && isLeader) {
-                            return _buildAddCategoryButton(context, ref);
-                          } else {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CategoryItemScreen(title: categoriesState[index].categoryName),
+    return Column(
+      // crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Text(
+          "Categories",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,),
+        ),
+        SizedBox(height: 16),
+        Expanded(
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator()) // Show loader while fetching
+              : categoriesState.isEmpty
+                  ? Column(
+                      // crossAxisAlignment: CrossAxisAlignment.center,
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "No categories found",
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 16),
+                        if (isLeader) _buildAddCategoryButton(context, ref), // Show add button only for leaders
+                      ],
+                    )
+                  : GridView.builder(
+                      itemCount: isLeader ? categoriesState.length + 1 : categoriesState.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                      itemBuilder: (context, index) {
+                        if (index == categoriesState.length && isLeader) {
+                          return _buildAddCategoryButton(context, ref);
+                        } else {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CategoryItemScreen(title: categoriesState[index].categoryName),
+                                ),
+                              );
+                            },
+                            child: Column(
+                              // mainAxisSize: MainAxisSize.min,
+                              // mainAxisAlignment: MainAxisAlignment.center,
+                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                );
-                              },
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    width: 80,
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Icon(categoryIconFromString(categoriesState[index].iconName).icon, size: 40, color: Colors.white),
+                                  child: Icon(categoryIconFromString(categoriesState[index].iconName).icon, size: 40, color: Colors.white),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  categoriesState[index].categoryName,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    categoriesState[index].categoryName,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                        },
-                      ),
-          ),
-        ],
-      ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                    ),
+        ),
+      ],
     );
   }
 
@@ -123,6 +119,7 @@ class _CategoriesListState extends ConsumerState<CategoriesList> {
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        
         children: [
           Container(
             width: 80,

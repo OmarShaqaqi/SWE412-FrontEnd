@@ -122,8 +122,11 @@ class _CategoryItemState extends ConsumerState<CategoryItemScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Category deleted successfully')),
                         );
+                        ref.refresh(categoriesProvider);
+                        
+                        
                         Navigator.pop(context); // Go back after deletion
-                        ref.refresh(categoriesProvider); // Refresh categories
+                        // Refresh categories
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Failed to delete category: ${response.body}')),

@@ -1,6 +1,9 @@
+import "dart:io";
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import "package:image_picker/image_picker.dart";
 import "package:senior_project/Providers/token_provider.dart";
 import "package:senior_project/Providers/user_provider.dart";
 import "package:senior_project/config.dart";
@@ -23,6 +26,8 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
  late String username;
   String phoneNumber = "Loading...";
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -65,10 +70,41 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
   }
 
+    Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+
+      // OPTIONAL: Upload the image to your backend here.
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final token = ref.watch(tokenProvider); // ✅ Watch token from Riverpod
-    final String image = 'assets/anonymous_profile.png';
+    Widget profileImage = Stack(
+  alignment: Alignment.bottomRight,
+  children: [
+    CircleAvatar(
+      radius: 50,
+      backgroundImage: _imageFile != null
+          ? FileImage(_imageFile!)
+          : const AssetImage('assets/anonymous_profile.png') as ImageProvider,
+      backgroundColor: Colors.white,
+    ),
+    GestureDetector(
+      onTap: _pickImage,
+      child: const CircleAvatar(
+        radius: 16,
+        backgroundColor: Colors.white,
+        child: Icon(Icons.edit, size: 18, color: Colors.black),
+      ),
+    ),
+  ],
+);
+
 
     final content = Column(
       children: [
@@ -138,7 +174,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     return CustomScaffold(
       title: "Profile",
-      content: CustomBodyWithImage(content: content, image: image),
+      content: CustomBodyWithImage(content: content, profileWidget: profileImage,),
     );
   }
 }

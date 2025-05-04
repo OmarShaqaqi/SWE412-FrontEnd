@@ -7,6 +7,8 @@ import 'package:senior_project/Providers/user_provider.dart';
 import 'package:senior_project/config.dart';
 import 'package:senior_project/templates/custom_scaffold.dart';
 import "package:senior_project/templates/custom_body_with_image.dart";
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
@@ -20,6 +22,9 @@ class _ProfileEditState extends ConsumerState<ProfileEditScreen> {
   bool _darkModeEnabled = false;
   String username = "Loading...";
   String phoneNumber = "Loading...";
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
   final TextEditingController usernameController = TextEditingController();
 
   @override
@@ -103,10 +108,43 @@ class _ProfileEditState extends ConsumerState<ProfileEditScreen> {
     }
   }
 
+  // ✅ Function to pick an image from the gallery
+    Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+
+      // OPTIONAL: Upload the image to your backend here.
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final token = ref.watch(tokenProvider); // ✅ Watch token from Riverpod
-    final String image = 'assets/anonymous_profile.png';
+    Widget profileImage = Stack(
+  alignment: Alignment.bottomRight,
+  children: [
+    CircleAvatar(
+      radius: 50,
+      backgroundImage: _imageFile != null
+          ? FileImage(_imageFile!)
+          : const AssetImage('assets/anonymous_profile.png') as ImageProvider,
+      backgroundColor: Colors.white,
+    ),
+    GestureDetector(
+      onTap: _pickImage,
+      child: const CircleAvatar(
+        radius: 16,
+        backgroundColor: Colors.white,
+        child: Icon(Icons.edit, size: 18, color: Colors.black),
+      ),
+    ),
+  ],
+);
+
 
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -154,6 +192,7 @@ class _ProfileEditState extends ConsumerState<ProfileEditScreen> {
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                width: double.infinity,
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 223, 247, 226),
                   borderRadius: BorderRadius.circular(18.0),
@@ -188,7 +227,7 @@ class _ProfileEditState extends ConsumerState<ProfileEditScreen> {
 
     return CustomScaffold(
       title: "Edit Profile",
-      content: CustomBodyWithImage(content: content, image: image),
+      content: CustomBodyWithImage(content: content, profileWidget: profileImage),
     );
   }
 }
