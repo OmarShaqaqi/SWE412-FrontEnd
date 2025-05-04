@@ -29,6 +29,7 @@ class CategoriesNotifier extends StateNotifier<List<Category>> {
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = json.decode(response.body);
+        print(jsonList); // Debugging line to check the fetched categories
         state = jsonList.map((json) => Category.fromJson(json)).toList();
       } else {
         print('Failed to load categories: ${response.statusCode}');
@@ -39,7 +40,7 @@ class CategoriesNotifier extends StateNotifier<List<Category>> {
 
     _isLoading = false; // Mark loading as complete
   }
-  Future<void> addCategory(String categoryName) async {
+  Future<void> addCategory(String categoryName,String iconName) async {
     final token = ref.read(tokenProvider);  // Get the token from the token provider
     final selectedGroup = ref.read(selectedGroupIdProvider);  // Get the selected group ID from the provider
 
@@ -55,11 +56,12 @@ class CategoriesNotifier extends StateNotifier<List<Category>> {
         body:json.encode({
         'groupId': selectedGroup,
         'categoryName': categoryName,
+        'iconName': iconName, // Replace with the actual icon name if needed
       }),
       );
 
       if (response.statusCode == 200) {
-        state = [...state, Category(categoryName: categoryName, groupId : selectedGroup!)];
+        state = [...state, Category(categoryName: categoryName, groupId : selectedGroup!, iconName: iconName)];
       } else {
         throw Exception('Failed to add category');
       }

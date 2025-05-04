@@ -112,6 +112,8 @@ Widget build(BuildContext context) {
         .where((expense) => (expense.status?.toLowerCase() ?? "") != "pending")
         .toList();
   }
+ 
+
 
   return RefreshIndicator(
     onRefresh: () async {
@@ -170,6 +172,7 @@ Widget build(BuildContext context) {
       ),
     ),
   );
+  
 }
 
 

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/Providers/groups_provider.dart';
 import 'package:senior_project/Providers/token_provider.dart';
+import 'package:senior_project/Providers/users_provider.dart';
 import 'package:senior_project/models/expense_model.dart';
 import 'package:senior_project/models/participant_model.dart';
 import 'package:senior_project/screens/authentication/login.dart';
+import 'package:senior_project/widgets/category_icon.dart';
 import "../Providers/categories_provider.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:senior_project/widgets/category_icon.dart';
 
 Future<void> showLogoutDialog(BuildContext context, dynamic ref) {
   final token = ref.read(tokenProvider);
@@ -45,10 +48,12 @@ Future<void> showLogoutDialog(BuildContext context, dynamic ref) {
                 height: 60,
                 child: ElevatedButton(
                   onPressed: () {
-                    
                     print("Session ended");
-                    ref.read(tokenProvider.notifier).removeToken(); // Remove the token from the provider
-                    Navigator.pushAndRemoveUntil(context,
+                    ref
+                        .read(tokenProvider.notifier)
+                        .removeToken(); // Remove the token from the provider
+                    Navigator.pushAndRemoveUntil(
+                        context,
                         MaterialPageRoute(builder: (context) => LoginScreen()),
                         (Route<dynamic> route) => false);
 
@@ -121,7 +126,6 @@ Future<String?> addParticipantDialog(BuildContext context) {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           content: SingleChildScrollView(
-            
             child: Column(children: [
               const Text(
                 "Participant:",
@@ -407,8 +411,12 @@ Future<void> participantInfo(BuildContext context, Participant participant) {
   );
 }
 
-
-Future<void> participantInfoWithDelete(BuildContext context, Participant participant, int groupId, WidgetRef ref, VoidCallback onDeleted) {
+Future<void> participantInfoWithDelete(
+    BuildContext context,
+    Participant participant,
+    int groupId,
+    WidgetRef ref,
+    VoidCallback onDeleted) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -494,47 +502,48 @@ Future<void> participantInfoWithDelete(BuildContext context, Participant partici
               ],
             ),
             ElevatedButton(
-            onPressed: () async {
-                  try {
-                    final token = ref.read(tokenProvider);
-                    final url = Uri.parse('http://10.0.2.2:8080/participants/deleteParticipant?groupId=$groupId&participant_phone=${participant.phone}');
+              onPressed: () async {
+                try {
+                  final token = ref.read(tokenProvider);
+                  final url = Uri.parse(
+                      'http://10.0.2.2:8080/participants/deleteParticipant?groupId=$groupId&participant_phone=${participant.phone}');
 
-                    final response = await http.get(
-                      url,
-                      headers: {
-                        'Authorization': 'Bearer $token',
-                        'Content-Type': 'application/json',
-                      },
-                      
-                    );
+                  final response = await http.get(
+                    url,
+                    headers: {
+                      'Authorization': 'Bearer $token',
+                      'Content-Type': 'application/json',
+                    },
+                  );
 
-                    if (response.statusCode == 200) {
-                      onDeleted();
-                      Navigator.of(context).pop(); // Close dialog
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Participant deleted successfully')),
-                      );
-                      print("Participant deleted");
-                    } else {
-                      Navigator.of(context).pop(); // Close dialog
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Failed to delete: ${response.body}')),
-                      );
-                      print("Failed to delete participant: ${response.body}");
-                    }
-                  } catch (e) {
+                  if (response.statusCode == 200) {
+                    onDeleted();
                     Navigator.of(context).pop(); // Close dialog
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error: $e')),
+                      const SnackBar(
+                          content: Text('Participant deleted successfully')),
                     );
-                    print("Error deleting participant: $e");
+                    print("Participant deleted");
+                  } else {
+                    Navigator.of(context).pop(); // Close dialog
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text('Failed to delete: ${response.body}')),
+                    );
+                    print("Failed to delete participant: ${response.body}");
                   }
-                },
-
+                } catch (e) {
+                  Navigator.of(context).pop(); // Close dialog
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error: $e')),
+                  );
+                  print("Error deleting participant: $e");
+                }
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 0, 208, 158),
-                padding: const EdgeInsets.symmetric(
-                    vertical: 10, horizontal: 10),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25.0),
                 ),
@@ -552,7 +561,6 @@ Future<void> participantInfoWithDelete(BuildContext context, Participant partici
     },
   );
 }
-
 
 Future<void> expenseDetails(BuildContext context, Expense expense) {
   return showDialog(
@@ -684,11 +692,10 @@ Future<void> expenseDetails(BuildContext context, Expense expense) {
                     Text("Details"),
                     SizedBox(width: 10),
                     Container(
-                      
                       alignment: Alignment.center,
                       width: 200,
                       height: 200,
-                      decoration:  BoxDecoration(
+                      decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 223, 247, 226),
                         borderRadius: BorderRadius.all(
                           Radius.circular(18.0),
@@ -699,6 +706,29 @@ Future<void> expenseDetails(BuildContext context, Expense expense) {
                   ],
                 ),
                 const SizedBox(height: 30),
+                 
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    // Handle delete expense logic here
+                    // final bool isLeader = ref.watch(userRoleProvider);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 80),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                  ),
+                  child: const Text(
+                    "Delete Expense",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -831,9 +861,9 @@ Future<void> addExpenseDialog(
                       const Text("Amount"),
                       SizedBox(width: 10),
                       Image.asset(
-                          'assets/Saudi_Riyal_Symbol.png',
-                          height: 15, // Adjust symbol size relative to text
-                        ),
+                        'assets/Saudi_Riyal_Symbol.png',
+                        height: 15, // Adjust symbol size relative to text
+                      ),
                     ],
                   ),
                   TextFormField(
@@ -841,7 +871,6 @@ Future<void> addExpenseDialog(
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       labelText: "Amount",
-                      
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
@@ -981,6 +1010,7 @@ Future<void> addExpenseDialog(
 
 Future<void> addCategory(BuildContext context, WidgetRef ref) {
   final TextEditingController _categoryController = TextEditingController();
+  CategoryIcon selectedIcon = CategoryIcon.food;
 
   return showDialog(
     context: context,
@@ -1014,16 +1044,41 @@ Future<void> addCategory(BuildContext context, WidgetRef ref) {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 15),
+                DropdownButton<CategoryIcon>(
+                  value: selectedIcon,
+                  isExpanded: true,
+                  icon: const Icon(Icons.arrow_drop_down),
+                  onChanged: (CategoryIcon? newIcon) {
+                    if (newIcon != null) {
+                      selectedIcon = newIcon;
+                      (context as Element)
+                          .markNeedsBuild(); // update dialog manually
+                    }
+                  },
+                  items: CategoryIcon.values.map((icon) {
+                    return DropdownMenuItem(
+                      value: icon,
+                      child: Row(
+                        children: [
+                          Icon(icon.icon, color: Colors.black),
+                          const SizedBox(width: 10),
+                          Text(icon.label),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
                 ElevatedButton(
                   onPressed: () async {
                     String categoryName = _categoryController.text.trim();
 
                     if (categoryName.isNotEmpty) {
+                      print("selected item name" + selectedIcon.name);
                       try {
                         await ref
                             .read(categoriesProvider.notifier)
-                            .addCategory(categoryName);
+                            .addCategory(categoryName, selectedIcon.name);
                         // Optionally, show a success message here.
                         Navigator.of(context).pop(); // Close the dialog
                       } catch (e) {

@@ -122,7 +122,7 @@ class _CustomBodyGroupState extends ConsumerState<CustomBodyGroup> {
                               child: Container(
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
-                                  color: Colors.black,
+                                  color: Colors.blue,
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: Text(

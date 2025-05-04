@@ -157,6 +157,7 @@ class _MembersListState extends ConsumerState<MembersList> {
         throw Exception("Failed to load participants");
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         hasError = true;
         isLoading = false;

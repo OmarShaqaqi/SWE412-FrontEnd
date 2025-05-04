@@ -6,6 +6,7 @@ import 'package:senior_project/screens/groups/add_participant.dart';
 import 'package:senior_project/Providers/token_provider.dart';
 import "package:senior_project/templates/custom_body.dart";
 import "package:senior_project/templates/custom_scaffold.dart";
+import 'package:senior_project/widgets/group_icon.dart';
 
 class AddGroup extends ConsumerStatefulWidget {
   const AddGroup({super.key});
@@ -17,10 +18,13 @@ class AddGroup extends ConsumerStatefulWidget {
 class _AddGroupState extends ConsumerState<AddGroup> {
   final TextEditingController groupNameController = TextEditingController();
   final TextEditingController budgetController = TextEditingController();
+  GroupIcon selectedIcon = GroupIcon.wallet;
 
   Future<void> addGroup() async {
     final name = groupNameController.text.trim();
     final budget = int.tryParse(budgetController.text.trim()) ?? 0;
+     // Default icon
+
 
     if (name.isEmpty || budget <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -30,7 +34,7 @@ class _AddGroupState extends ConsumerState<AddGroup> {
     }
 
     try {
-      await ref.read(groupsProvider.notifier).addGroup(name, budget, ref);
+      await ref.read(groupsProvider.notifier).addGroup(name, budget, selectedIcon.name , ref);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Group added successfully!")),
       );
@@ -57,8 +61,44 @@ class _AddGroupState extends ConsumerState<AddGroup> {
       children: [
         Form(
           child: Column(
-            
+            //put the Icons to choose here
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Text(
+                "Choose Group Icon",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              DropdownButton<GroupIcon>(
+                value: selectedIcon,
+                isExpanded: true,
+                icon: const Icon(Icons.arrow_drop_down),
+                underline: Container(
+                  height: 2,
+                  color: Color.fromARGB(255, 0, 208, 158),
+                ),
+                onChanged: (GroupIcon? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      selectedIcon = newValue;
+                    });
+                  }
+                },
+                items: GroupIcon.values.map((icon) {
+                  return DropdownMenuItem<GroupIcon>(
+                    value: icon,
+                    child: Row(
+                      children: [
+                        Icon(icon.iconData, color: Colors.black),
+                        const SizedBox(width: 10),
+                        Text(icon.label),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              
               const Text("Group name",
                 style: TextStyle(
                   fontSize: 20,
@@ -78,6 +118,7 @@ class _AddGroupState extends ConsumerState<AddGroup> {
                 ),
               ),
               const SizedBox(height: 20),
+
               Row(
                     children: [
                       SizedBox(width: 10),
@@ -109,14 +150,16 @@ class _AddGroupState extends ConsumerState<AddGroup> {
                 ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: addGroup, // ✅ Call addGroup function
-                child: const Text(
-                  "Add Group",
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 0, 208, 158),
+              Center(
+                child: ElevatedButton(
+                  onPressed: addGroup, // ✅ Call addGroup function
+                  child: const Text(
+                    "Add Group",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 0, 208, 158),
+                  ),
                 ),
               ),
             ],

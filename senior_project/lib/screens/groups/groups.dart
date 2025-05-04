@@ -4,6 +4,7 @@ import "package:senior_project/Providers/groups_provider.dart";
 import "package:senior_project/Providers/users_provider.dart";
 import "package:senior_project/templates/custom_body_group.dart";
 import "package:senior_project/templates/custom_scaffold.dart";
+import "package:senior_project/widgets/group_icon.dart";
 import "group_item.dart";
 import "add_group.dart";
 
@@ -91,7 +92,7 @@ class GroupsScreen extends ConsumerWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,                         
                           children: [
-                            Icon(Icons.group, size: 40, color: Colors.white),
+                            Icon(groupIconFromString(groups[index].iconName)?.iconData ?? Icons.wallet, size: 40, color: Colors.white),
                             Text(groups[index].name,style: TextStyle(color: Colors.white),),
                           ],
                         ),

@@ -34,7 +34,7 @@ class GroupsNotifier extends StateNotifier<List<Group>> {
     }
   }
 
-Future<void> addGroup(String name, int budget, WidgetRef ref) async {
+Future<void> addGroup(String name, int budget,String iconName , WidgetRef ref) async {
   final token = ref.read(tokenProvider);
 
   try {
@@ -47,6 +47,7 @@ Future<void> addGroup(String name, int budget, WidgetRef ref) async {
       body: json.encode({
         'name': name,
         'budget': budget,
+        'iconName': iconName, // Use the selected icon's label
       }),
     );
 
