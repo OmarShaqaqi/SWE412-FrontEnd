@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:senior_project/Providers/groups_provider.dart';
 import 'package:senior_project/Providers/token_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:senior_project/config.dart';
 
 class GroupModificationWidget extends ConsumerStatefulWidget {
   const GroupModificationWidget({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class _GroupModificationWidgetState
       return;
     }
 
-    final url = Uri.parse('http://10.0.2.2:8080/groups/delete/$groupId');
+    final url = Uri.parse('$baseUrl/groups/delete/$groupId');
 
     try {
       setState(() {
@@ -108,7 +109,7 @@ class _GroupModificationWidgetState
     }
   }
 
-  final url = Uri.parse('http://10.0.2.2:8080/groups/update/$groupId');
+  final url = Uri.parse('$baseUrl/groups/update/$groupId');
 
   try {
     final response = await http.post(

@@ -3,10 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:senior_project/Providers/token_provider.dart';
 import 'package:senior_project/models/expense_model.dart';
+import 'package:senior_project/config.dart';
 
 final todayExpensesProvider = FutureProvider<List<Expense>>((ref) async {
   final token = ref.read(tokenProvider); // must not be null
-  final url = Uri.parse('http://10.0.2.2:8080/expenses/today');
+  final url = Uri.parse('$baseUrl/expenses/today');
 
   final response = await http.get(url, headers: {
     'Authorization': 'Bearer $token',

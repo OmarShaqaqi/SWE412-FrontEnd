@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:senior_project/Providers/token_provider.dart';
 import 'package:senior_project/Providers/user_provider.dart';
+import 'package:senior_project/config.dart';
 import 'package:senior_project/templates/custom_scaffold.dart';
 import "package:senior_project/templates/custom_body_with_image.dart";
 
@@ -36,7 +37,7 @@ class _ProfileEditState extends ConsumerState<ProfileEditScreen> {
       return;
     }
 
-    final url = Uri.parse("http://10.0.2.2:8080/getinfo");
+    final url = Uri.parse("$baseUrl/getinfo");
 
     try {
       final response = await http.get(
@@ -71,7 +72,7 @@ class _ProfileEditState extends ConsumerState<ProfileEditScreen> {
       return;
     }
 
-    final url = Uri.parse("http://10.0.2.2:8080/updateuser");
+    final url = Uri.parse("$baseUrl/updateuser");
 
     try {
       final response = await http.put(

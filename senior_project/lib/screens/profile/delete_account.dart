@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:senior_project/Providers/token_provider.dart';
+import 'package:senior_project/config.dart';
 import 'package:senior_project/templates/custom_scaffold.dart';
 import "package:senior_project/screens/authentication/login.dart";
 import "package:senior_project/templates/custom_body.dart";
@@ -36,7 +37,7 @@ class _DeleteAccountState extends ConsumerState<DeleteAccountScreen> {
       return;
     }
 
-    final url = Uri.parse("http://10.0.2.2:8080/deleteuser");
+    final url = Uri.parse("$baseUrl/deleteuser");
 
     try {
       final response = await http.post(

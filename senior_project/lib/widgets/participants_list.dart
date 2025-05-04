@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:senior_project/Providers/groups_provider.dart'; // Ensure correct import
 import 'package:senior_project/Providers/token_provider.dart';
+import 'package:senior_project/config.dart';
 import 'package:senior_project/screens/groups/groups.dart';
 import "./dialog_utils.dart";
 
@@ -32,7 +33,7 @@ class _ParticipantsListState extends ConsumerState<ParticipantsList> {
     try {
       final response = await http.get(
         Uri.parse(
-            "http://10.0.2.2:8080/isuseravailable/$participant"), // Replace with actual API endpoint
+            "$baseUrl/isuseravailable/$participant"), // Replace with actual API endpoint
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -85,7 +86,7 @@ class _ParticipantsListState extends ConsumerState<ParticipantsList> {
       try {
         final response = await http.post(
           Uri.parse(
-              "http://10.0.2.2:8080/participants/add"), // Replace with actual API endpoint
+              "$baseUrl/participants/add"), // Replace with actual API endpoint
           headers: {
             "Authorization": "Bearer $token",
             "Content-Type": "application/json",

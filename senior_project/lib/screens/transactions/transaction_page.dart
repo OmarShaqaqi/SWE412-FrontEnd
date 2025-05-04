@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:senior_project/config.dart';
 import 'package:senior_project/models/expense_model.dart';
 import 'package:senior_project/templates/custom_scaffold.dart';
 import 'package:senior_project/templates/transaction_body.dart';
@@ -54,7 +55,7 @@ void _openCalendar() async {
 }
 Future<List<Expense>> _fetchExpensesByDate(String date) async {
   final token = ref.read(tokenProvider);
-  final url = Uri.parse('http://10.0.2.2:8080/expenses/date/$date'); // Replace with your real API
+  final url = Uri.parse('$baseUrl/expenses/date/$date'); // Replace with your real API
   final response = await http.get(    
     url,
     headers: {

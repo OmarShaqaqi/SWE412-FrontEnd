@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:senior_project/config.dart';
 import 'dart:convert';
 import './token_provider.dart';
 
@@ -18,7 +19,7 @@ class DateTypeExpensesNotifier extends StateNotifier<Map<String, double>> {
       _isLoading = true;
 
       final token = ref.read(tokenProvider);
-      final Uri url = Uri.parse('http://10.0.2.2:8080/expenses/$dateType');
+      final Uri url = Uri.parse('$baseUrl/expenses/$dateType');
 
       final response = await http.get(
         url,

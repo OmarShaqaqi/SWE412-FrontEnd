@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:senior_project/Providers/groups_provider.dart';
 import 'package:senior_project/Providers/token_provider.dart';
 import 'package:senior_project/Providers/users_provider.dart';
+import 'package:senior_project/config.dart';
 import 'package:senior_project/models/expense_model.dart';
 import 'package:senior_project/models/participant_model.dart';
 import 'package:senior_project/screens/authentication/login.dart';
@@ -506,7 +507,7 @@ Future<void> participantInfoWithDelete(
                 try {
                   final token = ref.read(tokenProvider);
                   final url = Uri.parse(
-                      'http://10.0.2.2:8080/participants/deleteParticipant?groupId=$groupId&participant_phone=${participant.phone}');
+                      '$baseUrl/participants/deleteParticipant?groupId=$groupId&participant_phone=${participant.phone}');
 
                   final response = await http.get(
                     url,
@@ -940,7 +941,7 @@ Future<void> addExpenseDialog(
 
                               // ✅ Send API request to backend
                               final response = await http.post(
-                                Uri.parse('http://10.0.2.2:8080/expenses/add'),
+                                Uri.parse('$baseUrl/expenses/add'),
                                 headers: {
                                   'Content-Type': 'application/json',
                                   'Authorization': 'Bearer $jwtToken',

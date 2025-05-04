@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:senior_project/Providers/groups_provider.dart';
+import 'package:senior_project/config.dart';
 import 'package:senior_project/models/category_model.dart';
 import 'dart:convert';
 import './token_provider.dart';
@@ -17,7 +18,7 @@ class CategoriesNotifier extends StateNotifier<List<Category>> {
     _isLoading = true;
     state = []; // Reset state before fetching
     final token = ref.read(tokenProvider);
-    final Uri url = Uri.parse('http://10.0.2.2:8080/categories/list?groupId=$groupId');
+    final Uri url = Uri.parse('$baseUrl/categories/list?groupId=$groupId');
 
     try {
       final response = await http.get(
@@ -44,7 +45,7 @@ class CategoriesNotifier extends StateNotifier<List<Category>> {
     final token = ref.read(tokenProvider);  // Get the token from the token provider
     final selectedGroup = ref.read(selectedGroupIdProvider);  // Get the selected group ID from the provider
 
-    final Uri url = Uri.parse('http://10.0.2.2:8080/categories/add');
+    final Uri url = Uri.parse('$baseUrl/categories/add');
 
     try {
       final response = await http.post(

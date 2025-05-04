@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:senior_project/config.dart';
 import '../models/group_model.dart';
 import 'token_provider.dart';
 
@@ -16,7 +17,7 @@ class GroupsNotifier extends StateNotifier<List<Group>> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:8080/groups/get'), // Replace with your actual API endpoint
+        Uri.parse('$baseUrl/groups/get'), // Replace with your actual API endpoint
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -39,7 +40,7 @@ Future<void> addGroup(String name, int budget,String iconName , WidgetRef ref) a
 
   try {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:8080/groups/add'),
+      Uri.parse('$baseUrl/groups/add'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',

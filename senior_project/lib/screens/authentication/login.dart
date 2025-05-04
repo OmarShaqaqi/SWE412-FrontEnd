@@ -11,15 +11,17 @@ import "signup.dart";
 import "forgot_password.dart";
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../../config.dart';
 
 class LoginScreen extends ConsumerWidget {
   final TextEditingController usernameLoginController = TextEditingController();
   final TextEditingController passwordLoginController = TextEditingController();
 
+
   Future<void> handleSignin(BuildContext context, WidgetRef ref) async {
     if (usernameLoginController.text.isNotEmpty && passwordLoginController.text.isNotEmpty) {
       final response = await http.post(
-        Uri.parse("http://10.0.2.2:8080/login"),
+        Uri.parse('$baseUrl/login'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "phone": usernameLoginController.text.trim(),

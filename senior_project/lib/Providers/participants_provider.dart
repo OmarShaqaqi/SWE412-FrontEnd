@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:senior_project/config.dart';
 import 'package:senior_project/models/participant_model.dart';
 import 'dart:convert';
 import './token_provider.dart';
@@ -16,7 +17,7 @@ class ParticipantsNotifier extends StateNotifier<List<Participant>> {
     _isLoading = true;
     state = []; // Reset state before fetching
     final token = ref.read(tokenProvider);
-    final Uri url = Uri.parse('http://10.0.2.2:8080/participants/get/$groupId');
+    final Uri url = Uri.parse('$baseUrl/participants/get/$groupId');
 
     try {
       final response = await http.get(

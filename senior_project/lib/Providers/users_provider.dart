@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:senior_project/config.dart';
 import 'dart:convert';
 import './token_provider.dart'; // Assuming you have a token provider
 
@@ -16,7 +17,7 @@ class UserRoleNotifier extends StateNotifier<bool> {
     try {
       // API call to the backend to fetch user role for the current group
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:8080/groups/$groupId/user-role'),
+        Uri.parse('$baseUrl/groups/$groupId/user-role'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

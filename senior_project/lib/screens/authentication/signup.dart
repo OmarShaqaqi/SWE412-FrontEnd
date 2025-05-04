@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:senior_project/config.dart';
 import 'package:senior_project/screens/home/HomeScreen.dart';
 import "../../widgets/password.dart";
 import "login.dart";
@@ -135,7 +136,7 @@ Future<void> registerUser() async {
       responseMessage = null;
     });
  
-    final url = Uri.parse("http://10.0.2.2:8080/signup"); // Change this to your backend URL
+    final url = Uri.parse("$baseUrl/signup"); // Change this to your backend URL
  
     final response = await http.post(
       url,

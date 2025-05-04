@@ -11,7 +11,7 @@ class CalendarDialog extends StatefulWidget {
 }
 
 class _CalendarDialogState extends State<CalendarDialog> {
-  DateTime? _selectedDate;
+  DateTime? _selectedDate = DateTime.now();
   DateTime _focusedDay = DateTime.now();
 
   @override

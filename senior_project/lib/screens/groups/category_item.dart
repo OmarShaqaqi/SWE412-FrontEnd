@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:senior_project/Providers/categories_provider.dart';
 import 'package:senior_project/Providers/expenses_provider.dart';
 import 'package:senior_project/Providers/groups_provider.dart';
+import 'package:senior_project/config.dart';
 import 'package:senior_project/templates/custom_body_groupItem.dart';
 import 'package:senior_project/templates/custom_scaffold.dart';
 import 'package:senior_project/Providers/token_provider.dart';
@@ -105,7 +106,7 @@ class _CategoryItemState extends ConsumerState<CategoryItemScreen> {
 
                   if (confirm == true) {
                     final url = Uri.parse(
-                      'http://10.0.2.2:8080/categories/delete?groupId=$groupId&categoryName=${Uri.encodeComponent(widget.title)}',
+                      '$baseUrl/categories/delete?groupId=$groupId&categoryName=${Uri.encodeComponent(widget.title)}',
                     );
 
                     try {

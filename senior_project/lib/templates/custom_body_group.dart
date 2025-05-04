@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:senior_project/Providers/token_provider.dart';
 import 'package:senior_project/widgets/price_widget.dart';
+import 'package:senior_project/config.dart';
 
 class CustomBodyGroup extends ConsumerStatefulWidget {
   final Widget content;
@@ -28,7 +29,7 @@ class _CustomBodyGroupState extends ConsumerState<CustomBodyGroup> {
   Future<void> _fetchGroupData() async {
     try {
       final token = ref.read(tokenProvider);
-      final url = Uri.parse('http://10.0.2.2:8080/groups/personal');
+      final url = Uri.parse('$baseUrl/groups/personal');
       final response = await http.get(
         url,
         headers: {'Authorization': 'Bearer $token'},

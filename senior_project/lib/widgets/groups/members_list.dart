@@ -97,6 +97,7 @@ import 'package:http/http.dart' as http;
 import 'package:senior_project/Providers/groups_provider.dart';
 import 'package:senior_project/Providers/token_provider.dart';
 import 'package:senior_project/Providers/users_provider.dart';
+import 'package:senior_project/config.dart';
 import 'package:senior_project/models/participant_model.dart';
 import 'package:senior_project/screens/groups/add_participant.dart';
 import 'package:senior_project/widgets/dialog_utils.dart';
@@ -136,7 +137,7 @@ class _MembersListState extends ConsumerState<MembersList> {
       return;
     }
 
-    final url = Uri.parse('http://10.0.2.2:8080/participants/get/$groupId');
+    final url = Uri.parse('$baseUrl/participants/get/$groupId');
 
     try {
       final response = await http.get(

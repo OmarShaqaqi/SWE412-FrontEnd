@@ -4,6 +4,7 @@ import "package:senior_project/Providers/categories_provider.dart";
 import "package:senior_project/Providers/expenses_provider.dart";
 import "package:senior_project/Providers/groups_provider.dart";
 import "package:senior_project/Providers/users_provider.dart"; // ✅ Import user provider
+import "package:senior_project/config.dart";
 import "package:senior_project/models/expense_model.dart";
 import "./expense_row.dart";
 import "../dialog_utils.dart"; // ✅ Ensure this contains addExpenseDialog()
@@ -33,7 +34,7 @@ class _ExpensesListState extends ConsumerState<ExpensesList> {
   }
 
   Future<void> _updateExpenseStatus(int expenseId, String status, String? jwtToken) async {
-    final url = Uri.parse("http://10.0.2.2:8080/expenses/$status?expenseId=$expenseId"); // ✅ Pass as query param
+    final url = Uri.parse("$baseUrl/expenses/$status?expenseId=$expenseId"); // ✅ Pass as query param
 
     print("Sending request to: $url"); // ✅ Debugging log
 

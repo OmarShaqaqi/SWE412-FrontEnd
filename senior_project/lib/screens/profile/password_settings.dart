@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:senior_project/Providers/token_provider.dart';
+import 'package:senior_project/config.dart';
 import 'package:senior_project/templates/custom_scaffold.dart';
 import "../../templates/custom_body.dart";
 
@@ -40,7 +41,7 @@ class _PasswordSettingsScreenState extends ConsumerState<PasswordSettingsScreen>
       return;
     }
 
-    final url = Uri.parse("http://10.0.2.2:8080/changepassword");
+    final url = Uri.parse("$baseUrl/changepassword");
 
     try {
       final response = await http.put(
