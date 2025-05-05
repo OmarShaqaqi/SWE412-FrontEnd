@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import "package:image_picker/image_picker.dart";
+import "package:senior_project/Providers/profileImage_provider.dart";
 import "package:senior_project/Providers/token_provider.dart";
 import "package:senior_project/Providers/user_provider.dart";
 import "package:senior_project/config.dart";
@@ -70,67 +71,74 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
   }
 
-      Future<void> uploadProfileImage(File file) async {
-      final token = ref.read(tokenProvider);
-      final url = Uri.parse('$baseUrl/uploadProfilePicture');
+    //   Future<void> uploadProfileImage(File file) async {
+    //   final token = ref.read(tokenProvider);
+      
+    //   final bytes = await file.readAsBytes();
+    //   final base64Image = base64Encode(bytes);
+    //   print("Base64 Image: $base64Image");
+    //   final url = Uri.parse('$baseUrl/uploadProfilePicture');
+    //   final response = await http.post(
+    //     url,
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "Authorization": "Bearer $token",
+    //     },
+    //         body: jsonEncode({
+    //           "image_encode": base64Image, // match backend field name
+    //         }),
+    //   );
 
-      final request = http.MultipartRequest('POST', url);
-      request.headers['Authorization'] = 'Bearer $token';
+    //   if (response.statusCode == 200) {
+    //     print("✅ Profile image uploaded successfully");
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       const SnackBar(content: Text("Profile picture updated!")),
+    //     );
+    //   } else {
+    //     print("❌ Failed to upload: ${response.statusCode}");
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       const SnackBar(content: Text("Upload failed")),
+    //     );
+    //   }
+    // }
 
-      request.files.add(await http.MultipartFile.fromPath(
-        'file', // must match @RequestParam("file")
-        file.path,
-      ));
+    // Future<void> _pickImage() async {
+    //   final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    //   if (pickedFile != null) {
+    //     File image = File(pickedFile.path);
+    //     setState(() {
+    //       _imageFile = image;
+    //     });
 
-      final response = await request.send();
-
-      if (response.statusCode == 200) {
-        print("✅ Profile image uploaded successfully");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Profile picture updated!")),
-        );
-      } else {
-        print("❌ Failed to upload: ${response.statusCode}");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Upload failed")),
-        );
-      }
-    }
-
-    Future<void> _pickImage() async {
-      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
-        File image = File(pickedFile.path);
-        setState(() {
-          _imageFile = image;
-        });
-
-        await uploadProfileImage(image); // <-- Call upload
-      }
-    }
+    //     await uploadProfileImage(image); // <-- Call upload
+    //   }
+    // }
 
   @override
   Widget build(BuildContext context) {
     final token = ref.watch(tokenProvider); // ✅ Watch token from Riverpod
-    Widget profileImage = Stack(
-  alignment: Alignment.bottomRight,
-  children: [
-    CircleAvatar(
-      radius: 50,
-      backgroundImage: _imageFile != null
-          ? FileImage(_imageFile!)
-          : const AssetImage('assets/anonymous_profile.png') as ImageProvider,
-      backgroundColor: Colors.white,
-    ),
-    GestureDetector(
-      onTap: _pickImage,
-      child: const CircleAvatar(
-        radius: 16,
+    Widget profileImage =  Consumer(
+    builder: (context, ref, _) {
+    final imageAsync = ref.watch(profileImageProvider);
+    print("Image Async: $imageAsync");
+    return imageAsync.when(
+      data: (data) {
+        return CircleAvatar(
+          radius: 50,
+          backgroundImage: data != null
+              ? MemoryImage(data)
+              : const AssetImage('assets/anonymous_profile.png') as ImageProvider,
+          backgroundColor: Colors.white,
+        );
+      },
+      loading: () => const CircleAvatar(radius: 50, child: CircularProgressIndicator()),
+      error: (_, __) => const CircleAvatar(
+        radius: 50,
+        backgroundImage: AssetImage('assets/anonymous_profile.png'),
         backgroundColor: Colors.white,
-        child: Icon(Icons.edit, size: 18, color: Colors.black),
       ),
-    ),
-  ],
+    );
+  },
 );
 
 

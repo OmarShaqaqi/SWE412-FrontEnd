@@ -10,6 +10,7 @@ import "login.dart";
 import "../../templates/custom_scaffold.dart";
 import 'package:http/http.dart' as http;
 import 'dart:async';
+
 class SignupScreen extends StatefulWidget {
   @override
   _SignupScreenState createState() => _SignupScreenState();
@@ -25,7 +26,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final TextEditingController budgetController = TextEditingController();
 
 // void handleSignup() async {
@@ -58,7 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
 //   }
 // }
 
-//   
+//
 
 //second try
 // void handleSignup() async {
@@ -128,19 +130,19 @@ class _SignupScreenState extends State<SignupScreen> {
 //   }
 // }
 
-bool isLoading = false;
-String? responseMessage;
+  bool isLoading = false;
+  String? responseMessage;
 
-Future<void> registerUser() async {
+  Future<void> registerUser() async {
     if (!_formKey.currentState!.validate()) return;
- 
+
     setState(() {
       isLoading = true;
       responseMessage = null;
     });
- 
+
     final url = Uri.parse("$baseUrl/signup"); // Change this to your backend URL
- 
+
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
@@ -154,21 +156,21 @@ Future<void> registerUser() async {
         "budget": budgetController.text,
       }),
     );
- 
+
     setState(() {
       isLoading = false;
       if (response.statusCode == 200) {
         responseMessage = "Signup successful!";
-            Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-    );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        );
       } else {
-        responseMessage = "Signup failed: ${jsonDecode(response.body)['message']}";
+        responseMessage =
+            "Signup failed: ${jsonDecode(response.body)['message']}";
       }
     });
   }
- 
 
   @override
   Widget build(BuildContext context) {
@@ -186,7 +188,13 @@ Future<void> registerUser() async {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Username",style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),
+                  const Text(
+                    "Username",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 5),
                   TextFormField(
                     controller: userNameController, // Attach controller
@@ -208,8 +216,13 @@ Future<void> registerUser() async {
                     },
                   ),
                   const SizedBox(height: 20),
-          
-                  const Text("First Name",style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),
+                  const Text(
+                    "First Name",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 5),
                   TextFormField(
                     controller: firstNameController, // Attach controller
@@ -231,8 +244,13 @@ Future<void> registerUser() async {
                     },
                   ),
                   const SizedBox(height: 20),
-                  
-                  const Text("Last Name",style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),
+                  const Text(
+                    "Last Name",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 5),
                   TextFormField(
                     controller: lastNameController,
@@ -254,8 +272,13 @@ Future<void> registerUser() async {
                     },
                   ),
                   const SizedBox(height: 20),
-          
-                  const Text("Email",style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),
+                  const Text(
+                    "Email",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 5),
                   TextFormField(
                     controller: emailController,
@@ -279,9 +302,14 @@ Future<void> registerUser() async {
                     },
                   ),
                   const SizedBox(height: 20),
-          
-                  const Text("Mobile Number",style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),
-                  const SizedBox(height: 5),    
+                  const Text(
+                    "Mobile Number",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 5),
                   TextFormField(
                     controller: mobileController,
                     keyboardType: TextInputType.phone,
@@ -301,7 +329,7 @@ Future<void> registerUser() async {
                       }
                       final regExp = RegExp(
                           r'^(009665|9665|\+9665|05)(5|0|3|6|4|9|1|8|7)[0-9]{7}$');
-          
+
                       if (!regExp.hasMatch(value)) {
                         return "Please enter a valid mobile number";
                       }
@@ -309,14 +337,19 @@ Future<void> registerUser() async {
                     },
                   ),
                   const SizedBox(height: 20),
-                  
-                  const Text("Your Personal Budget",style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),
+                  const Text(
+                    "Your Personal Budget",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 5),
                   TextFormField(
                     controller: budgetController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
-                      hintText: "Enter your budget",                      
+                      hintText: "Enter your budget",
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
@@ -332,10 +365,14 @@ Future<void> registerUser() async {
                       return null;
                     },
                   ),
-          
                   const SizedBox(height: 20),
-          
-                  const Text("Password",style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),
+                  const Text(
+                    "Password",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 5),
                   TextFormField(
                     controller: passwordController,
@@ -345,9 +382,22 @@ Future<void> registerUser() async {
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
                         ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
                       ),
                     ),
                     validator: (value) {
@@ -358,8 +408,13 @@ Future<void> registerUser() async {
                     },
                   ),
                   const SizedBox(height: 20),
-          
-                  const Text("Confirm Password",style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),), 
+                  const Text(
+                    "Confirm Password",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
                   SizedBox(height: 5),
                   TextFormField(
                     controller: confirmPasswordController,
@@ -369,9 +424,22 @@ Future<void> registerUser() async {
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
                         ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
                       ),
                     ),
                     validator: (value) {
@@ -384,14 +452,14 @@ Future<void> registerUser() async {
                     },
                   ),
                   const SizedBox(height: 20),
-          
                   Center(
                     child: Column(
                       children: [
                         ElevatedButton(
                           onPressed: registerUser,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 0, 208, 158),
+                            backgroundColor:
+                                const Color.fromARGB(255, 0, 208, 158),
                             padding: const EdgeInsets.symmetric(
                                 vertical: 16, horizontal: 80),
                             shape: RoundedRectangleBorder(
@@ -408,46 +476,49 @@ Future<void> registerUser() async {
                           ),
                         ),
                         SizedBox(height: 5),
-                                            Text.rich(
-                      TextSpan(
-                        children: [
-                          const TextSpan(
-                            text: 'Already have an account?',
-                            style: TextStyle(color: Colors.black),
-                          ),
+                        Text.rich(
                           TextSpan(
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                              Navigator.pushReplacement(
-                                context,
-                                PageRouteBuilder(
-                                  transitionDuration: const Duration(milliseconds: 300),
-                                  pageBuilder: (context, animation, secondaryAnimation) => LoginScreen(),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    final offsetAnimation = Tween<Offset>(
-                                      begin: const Offset(1.0, 0.0), // Slide from right
-                                      end: Offset.zero,
-                                    ).chain(CurveTween(curve: Curves.easeInOut));
+                            children: [
+                              const TextSpan(
+                                text: 'Already have an account?',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              TextSpan(
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      PageRouteBuilder(
+                                        transitionDuration:
+                                            const Duration(milliseconds: 300),
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            LoginScreen(),
+                                        transitionsBuilder: (context, animation,
+                                            secondaryAnimation, child) {
+                                          final offsetAnimation = Tween<Offset>(
+                                            begin: const Offset(
+                                                1.0, 0.0), // Slide from right
+                                            end: Offset.zero,
+                                          ).chain(CurveTween(
+                                              curve: Curves.easeInOut));
 
-                                    return SlideTransition(
-                                      position: animation.drive(offsetAnimation),
-                                      child: child,
+                                          return SlideTransition(
+                                            position: animation
+                                                .drive(offsetAnimation),
+                                            child: child,
+                                          );
+                                        },
+                                      ),
                                     );
                                   },
-                                ),
-                              );
-
-                              },
-                            text: ' Login',
-                            style: const TextStyle(color: Colors.blue),
+                                text: ' Login',
+                                style: const TextStyle(color: Colors.blue),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 50),
-
-                        
-                        
+                        ),
+                        SizedBox(height: 50),
                       ],
                     ),
                   ),

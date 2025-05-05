@@ -2,6 +2,7 @@ import "dart:convert";
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:senior_project/Providers/profileImage_provider.dart';
 import 'package:senior_project/Providers/token_provider.dart';
 import 'package:senior_project/Providers/user_provider.dart';
 import 'package:senior_project/config.dart';
@@ -9,7 +10,6 @@ import 'package:senior_project/templates/custom_scaffold.dart';
 import "package:senior_project/templates/custom_body_with_image.dart";
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
   const ProfileEditScreen({super.key});
@@ -96,7 +96,9 @@ class _ProfileEditState extends ConsumerState<ProfileEditScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Profile updated successfully!")),
         );
-        ref.read(userProvider.notifier).updateUsername(usernameController.text.trim());
+        ref
+            .read(userProvider.notifier)
+            .updateUsername(usernameController.text.trim());
       } else {
         print("Update failed: ${response.body}");
         ScaffoldMessenger.of(context).showSnackBar(
@@ -108,43 +110,79 @@ class _ProfileEditState extends ConsumerState<ProfileEditScreen> {
     }
   }
 
-  // ✅ Function to pick an image from the gallery
-    Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
+  Future<void> uploadProfileImage(File file) async {
+    final token = ref.read(tokenProvider);
 
-      // OPTIONAL: Upload the image to your backend here.
+    final bytes = await file.readAsBytes();
+    final base64Image = base64Encode(bytes);
+    // final base65Image = base64Decode(
+    //     base64Image); // Print only the first 100 characters for debugging
+    print("Base64 Image: $base64Image");
+    final url = Uri.parse('$baseUrl/uploadProfilePicture');
+    final response = await http.post(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+      body: jsonEncode({
+        "image": base64Image, // match backend field name
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print("✅ Profile image uploaded successfully");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Profile picture updated!")),
+      );
+    } else {
+      print("❌ Failed to upload: ${response.statusCode}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Upload failed")),
+      );
     }
   }
 
+  // ✅ Function to pick an image from the gallery
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      File image = File(pickedFile.path);
+      setState(() {
+        _imageFile = image;
+      });
+
+      await uploadProfileImage(image); // <-- Call upload
+      // ref.refresh(profileImageProvider); // Refresh the image provider to get the new image
+      ref.invalidate(profileImageProvider);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final token = ref.watch(tokenProvider); // ✅ Watch token from Riverpod
-    Widget profileImage = Stack(
-  alignment: Alignment.bottomRight,
-  children: [
-    CircleAvatar(
-      radius: 50,
-      backgroundImage: _imageFile != null
-          ? FileImage(_imageFile!)
-          : const AssetImage('assets/anonymous_profile.png') as ImageProvider,
-      backgroundColor: Colors.white,
-    ),
-    GestureDetector(
-      onTap: _pickImage,
-      child: const CircleAvatar(
-        radius: 16,
-        backgroundColor: Colors.white,
-        child: Icon(Icons.edit, size: 18, color: Colors.black),
-      ),
-    ),
-  ],
-);
-
+    Widget profileImage = 
+    Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        CircleAvatar(
+          radius: 50,
+          backgroundImage: _imageFile != null
+              ? FileImage(_imageFile!)
+              : const AssetImage('assets/anonymous_profile.png')
+                  as ImageProvider,
+          backgroundColor: Colors.white,
+        ),
+        GestureDetector(
+          onTap: _pickImage,
+          child: const CircleAvatar(
+            radius: 16,
+            backgroundColor: Colors.white,
+            child: Icon(Icons.edit, size: 18, color: Colors.black),
+          ),
+        ),
+      ],
+    );
 
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -191,7 +229,8 @@ class _ProfileEditState extends ConsumerState<ProfileEditScreen> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 223, 247, 226),
@@ -227,7 +266,8 @@ class _ProfileEditState extends ConsumerState<ProfileEditScreen> {
 
     return CustomScaffold(
       title: "Edit Profile",
-      content: CustomBodyWithImage(content: content, profileWidget: profileImage),
+      content:
+          CustomBodyWithImage(content: content, profileWidget: profileImage),
     );
   }
 }
