@@ -10,6 +10,7 @@ class TokenNotifier extends StateNotifier<String?> {
   Future<void> _loadToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     state = prefs.getString("jwt_token");
+    
   }
 
   // ✅ Save the token persistently

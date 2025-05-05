@@ -54,6 +54,8 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      extendBody: true,
+      backgroundColor: const Color.fromARGB(255, 0, 208, 158),
       appBar: CustomAppbar(title: "Welcome"),
       body: CustomBody(
         content: Container(
@@ -70,13 +72,15 @@ class LoginScreen extends ConsumerWidget {
               const SizedBox(height: 5),               
               const Text(
                 "Phone Number",
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.left,
+                
               ),
+              const SizedBox(height: 5),
               TextFormField(
                 controller: usernameLoginController,
                 decoration: const InputDecoration(
-                  hintText: "example@example.com",
+                  hintText: "05xxxxxxxx",
                   filled: true,
                   fillColor: Color.fromARGB(255, 223, 247, 226),
                   border: OutlineInputBorder(
@@ -85,7 +89,8 @@ class LoginScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text("Password"),
+              const Text("Password",style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),
+              const SizedBox(height: 5),
               TextFormField(
                 controller: passwordLoginController,
                 obscureText: true,
@@ -113,13 +118,13 @@ class LoginScreen extends ConsumerWidget {
                       ),
                       child: const Text(
                         "Login",
-                        style: TextStyle(color: Color.fromARGB(255, 9, 48, 48)),
+                        style: TextStyle(color: Color.fromARGB(255, 9, 48, 48), fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                     const SizedBox(height: 20),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
                         );
@@ -145,10 +150,29 @@ class LoginScreen extends ConsumerWidget {
                           TextSpan(
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => SignupScreen()),
-                                );
+                                // Navigator.pushReplacement(
+                                //   context,
+                                //   MaterialPageRoute(builder: (context) => SignupScreen()),
+                                // );
+                                Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                  transitionDuration: const Duration(milliseconds: 400),
+                                  pageBuilder: (context, animation, secondaryAnimation) => SignupScreen(),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    final offsetAnimation = Tween<Offset>(
+                                      begin: const Offset(1.0, 0.0), // Start from right
+                                      end: Offset.zero,
+                                    ).chain(CurveTween(curve: Curves.easeInOut));
+
+                                    return SlideTransition(
+                                      position: animation.drive(offsetAnimation),
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
+
                               },
                             text: ' Sign Up',
                             style: const TextStyle(color: Colors.blue),

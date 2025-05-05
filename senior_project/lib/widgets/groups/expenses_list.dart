@@ -138,7 +138,14 @@ Widget build(BuildContext context) {
                       final expense = filteredExpenses[index];
                       return GestureDetector(
                         onTap: () {
-                         expenseDetails(context, expense);
+                        if (isLeader){
+                          expenseDetailsWithDelete(context, expense, ref);
+                        }
+                        else {
+                          expenseDetails(context, expense);
+                          }
+                        
+                        
                         },
                         child: ExpenseRow(
                           expense: expense,

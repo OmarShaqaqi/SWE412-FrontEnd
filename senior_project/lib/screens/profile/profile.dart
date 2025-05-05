@@ -70,16 +70,44 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
   }
 
-    Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
+      Future<void> uploadProfileImage(File file) async {
+      final token = ref.read(tokenProvider);
+      final url = Uri.parse('$baseUrl/uploadProfilePicture');
 
-      // OPTIONAL: Upload the image to your backend here.
+      final request = http.MultipartRequest('POST', url);
+      request.headers['Authorization'] = 'Bearer $token';
+
+      request.files.add(await http.MultipartFile.fromPath(
+        'file', // must match @RequestParam("file")
+        file.path,
+      ));
+
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        print("✅ Profile image uploaded successfully");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Profile picture updated!")),
+        );
+      } else {
+        print("❌ Failed to upload: ${response.statusCode}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Upload failed")),
+        );
+      }
     }
-  }
+
+    Future<void> _pickImage() async {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        File image = File(pickedFile.path);
+        setState(() {
+          _imageFile = image;
+        });
+
+        await uploadProfileImage(image); // <-- Call upload
+      }
+    }
 
   @override
   Widget build(BuildContext context) {

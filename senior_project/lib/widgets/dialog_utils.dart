@@ -707,12 +707,223 @@ Future<void> expenseDetails(BuildContext context, Expense expense) {
                   ],
                 ),
                 const SizedBox(height: 30),
-                 
+                SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    // Handle delete expense logic here
-                    // final bool isLeader = ref.watch(userRoleProvider);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 0, 208, 158),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 80),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                  ),
+                  child: const Text(
+                    "Close",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 9, 48, 48),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Future<void> expenseDetailsWithDelete(
+    BuildContext context, Expense expense, dynamic ref) {
+  final token = ref.read(tokenProvider);
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: Colors.white,
+        actionsAlignment: MainAxisAlignment.center,
+        titlePadding: const EdgeInsets.all(16),
+        title: const Text(
+          "Expenses Details",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Container(
+          height: 600,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment
+                  .spaceEvenly, // Dynamically adapts to content height
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Actor"),
+                    const SizedBox(width: 10),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 200,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        color: const Color.fromARGB(255, 223, 247, 226),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18.0),
+                        ),
+                      ),
+                      child: Text(expense.actor),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Category"),
+                    const SizedBox(width: 10),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 200,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        color: const Color.fromARGB(255, 223, 247, 226),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18.0),
+                        ),
+                      ),
+                      child: Text(expense.categoryName),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Amount"),
+                    const SizedBox(width: 10),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 200,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        color: const Color.fromARGB(255, 223, 247, 226),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18.0),
+                        ),
+                      ),
+                      child: Text(expense.amount.toString()),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Date"),
+                    const SizedBox(width: 10),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 200,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        color: const Color.fromARGB(255, 223, 247, 226),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18.0),
+                        ),
+                      ),
+                      child: Text(
+                          "${expense.date.year}-${expense.date.month.toString().padLeft(2, '0')}-${expense.date.day.toString().padLeft(2, '0')}"),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Status"),
+                    const SizedBox(width: 10),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 200,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        color: const Color.fromARGB(255, 223, 247, 226),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18.0),
+                        ),
+                      ),
+                      child: Text(expense.status.toString()),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment
+                      .start, // Aligns the TextField at the top
+                  children: [
+                    Text("Details"),
+                    SizedBox(width: 10),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 223, 247, 226),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18.0),
+                        ),
+                      ),
+                      child: Text(expense.description),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () async {
+                    print(expense.id);
+                    final uri = Uri.parse(
+                        "$baseUrl/expenses/delete?expenseId=${expense.id}");
+                    try {
+                      final response = await http.get(
+                        uri,
+                        headers: {
+                          'Authorization': 'Bearer $token',
+                          'Content-Type': 'application/json',
+                        },
+                      );
+                      if (response.statusCode == 200) {
+                        // Optionally show a success message
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Expense deleted successfully"),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      } else {
+                        // Optionally show an error message
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                "Failed to delete expense: ${response.body}"),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        // Optionally handle error response
+                      }
+                    } catch (e) {
+                      // Optionally handle connection errors
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Error: $e"),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                    Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
@@ -731,7 +942,8 @@ Future<void> expenseDetails(BuildContext context, Expense expense) {
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
