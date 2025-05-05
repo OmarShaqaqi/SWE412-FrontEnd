@@ -144,7 +144,7 @@ class _CustomBodyGroupState extends ConsumerState<CustomBodyGroupItem> {
               ),
               const SizedBox(height: 10),
               Text(
-              "${(percentage * 100).toStringAsFixed(0)}% of your expenses.",
+              "${(percentage * 100).toStringAsFixed(0)}% of your budget.",
               style: const TextStyle(color: Colors.white),
               ),
             ],

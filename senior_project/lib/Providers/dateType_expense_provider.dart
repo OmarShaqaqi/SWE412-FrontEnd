@@ -12,14 +12,14 @@ class DateTypeExpensesNotifier extends StateNotifier<Map<String, double>> {
 
   bool get isLoading => _isLoading;
 
-  Future<void> fetchDailyExpenses(String dateType) async {
+  Future<void> fetchDailyExpenses(String dateType, String selectedDate) async {
     try {
       // Mark loading AFTER microtask to avoid build conflict
       await Future.delayed(Duration.zero);
       _isLoading = true;
 
       final token = ref.read(tokenProvider);
-      final Uri url = Uri.parse('$baseUrl/expenses/$dateType');
+      final Uri url = Uri.parse('$baseUrl/expenses/$dateType?date=$selectedDate');
 
       final response = await http.get(
         url,

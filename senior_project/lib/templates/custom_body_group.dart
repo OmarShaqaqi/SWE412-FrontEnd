@@ -123,7 +123,7 @@ class _CustomBodyGroupState extends ConsumerState<CustomBodyGroup> {
                               child: Container(
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
-                                  color: Colors.blue,
+                                  color: Colors.black,
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: Text(
@@ -138,7 +138,7 @@ class _CustomBodyGroupState extends ConsumerState<CustomBodyGroup> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      "${(percentage * 100).toStringAsFixed(0)}% of your expenses.",
+                      "${(percentage * 100).toStringAsFixed(0)}% of your budget.",
                       style: const TextStyle(color: Colors.white),
                     ),
                   ],

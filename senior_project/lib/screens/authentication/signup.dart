@@ -203,9 +203,22 @@ class _SignupScreenState extends State<SignupScreen> {
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
                         ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
                       ),
                     ),
                     validator: (value) {
@@ -231,9 +244,22 @@ class _SignupScreenState extends State<SignupScreen> {
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
                         ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
                       ),
                     ),
                     validator: (value) {
@@ -259,9 +285,22 @@ class _SignupScreenState extends State<SignupScreen> {
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
                         ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
                       ),
                     ),
                     validator: (value) {
@@ -287,9 +326,22 @@ class _SignupScreenState extends State<SignupScreen> {
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
                         ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
                       ),
                     ),
                     validator: (value) {
@@ -318,9 +370,22 @@ class _SignupScreenState extends State<SignupScreen> {
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
                         ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
                       ),
                     ),
                     validator: (value) {
@@ -353,9 +418,22 @@ class _SignupScreenState extends State<SignupScreen> {
                       filled: true,
                       fillColor: Color.fromARGB(255, 223, 247, 226),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
                         ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(
+                              255, 223, 247, 226), // match fill color
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
                       ),
                     ),
                     validator: (value) {
