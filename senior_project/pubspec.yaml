@@ -72,8 +72,6 @@ flutter:
     - assets/Category.png
     - assets/Profile.png
     - assets/anonymous_profile.png
-    - assets/vector_animation.json
-    - assets/vector_green.json
     - assets/car.png
     - assets/car_pressed.png
     - assets/food.png
@@ -100,8 +98,14 @@ flutter:
     - assets/wedding_pressed.png
     - assets/calendar.png
     - assets/Saudi_Riyal_Symbol.png
+    - assets/sh_green_final.png
+    - assets/sh_white_final.png
 
 
+  fonts:
+    - family: SaudiFont
+      fonts:
+        - asset: assets/fonts/Saudi-Bold.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
