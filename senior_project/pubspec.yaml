@@ -108,6 +108,10 @@ flutter:
     - assets/calendar.png
     - assets/Saudi_Riyal_Symbol.png
     - assets/vector_green.json
+    - assets/sh_green_final.png
+    - assets/sh_white_final.png
+
+
 
 
 
@@ -140,3 +144,7 @@ flutter:
     #       weight: 400
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  fonts:
+    - family: SaudiFont
+      fonts:
+        - asset: assets/fonts/Saudi-Bold.ttf

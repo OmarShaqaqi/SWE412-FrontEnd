@@ -180,23 +180,23 @@ class AnalysisPage extends ConsumerStatefulWidget {
 }
 
 class _AnalysisPageState extends ConsumerState<AnalysisPage> {
-   @override
-void initState() {
-  super.initState();
+  @override
+  void initState() {
+    super.initState();
 
-  Future.microtask(() {
-    ref.read(dailyExpensesProvider.notifier).fetchDailyExpenses("day");
-  });
-}
-   int selectedTab = 0; // Track active tab (0: Daily, 1: Weekly, etc.)
+    Future.microtask(() {
+      ref.read(dailyExpensesProvider.notifier).fetchDailyExpenses("day");
+    });
+  }
+
+  int selectedTab = 0; // Track active tab (0: Daily, 1: Weekly, etc.)
   // List<double> expenses = [50, 100, 75, 30, 90, 120, 60]; // Example expenses
- 
-
 
   @override
   Widget build(BuildContext context) {
     final rawExpenses = ref.watch(dailyExpensesProvider);
     final expenses = rawExpenses.values.toList(); // List<double>
+    final sortedDates = rawExpenses.keys.toList()..sort();
 
     final content = SingleChildScrollView(
       child: Column(
@@ -211,10 +211,8 @@ void initState() {
               padding: const EdgeInsets.all(8.0), // Add some padding
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: ['Daily', 'Monthly', 'Yearly']
-                    .asMap()
-                    .entries
-                    .map((entry) {
+                children:
+                    ['Daily', 'Monthly', 'Yearly'].asMap().entries.map((entry) {
                   int index = entry.key;
                   String label = entry.value;
                   return GestureDetector(
@@ -230,7 +228,8 @@ void initState() {
                           ? const Color(0xff00d09e)
                           : const Color(0xffdff7e2),
                       labelStyle: TextStyle(
-                        color: selectedTab == index ? Colors.white : Colors.black,
+                        color:
+                            selectedTab == index ? Colors.white : Colors.black,
                       ),
                     ),
                   );
@@ -238,9 +237,9 @@ void initState() {
               ),
             ),
           ),
-      
+
           const SizedBox(height: 16),
-      
+
           // Graph Section
           ClipRRect(
             borderRadius: BorderRadius.circular(16.0), // Set the border radius
@@ -302,45 +301,30 @@ void initState() {
                             sideTitles: SideTitles(
                               showTitles: true,
                               getTitlesWidget: (double value, TitleMeta meta) {
+                                if (value.toInt() >= sortedDates.length)
+                                  return const Text('');
+
+                                final date =
+                                    DateTime.parse(sortedDates[value.toInt()]);
                                 switch (selectedTab) {
-                                  case 0: // Daily
-                                    const days = [
-                                      'Sun',
-                                      'Mon',
-                                      'Tue',
-                                      'Wed',
-                                      'Thu',
-                                      'Fri',
-                                      'Sat'
-                                    ];
-                                    // return Text(days[value.toInt()]);
-                                    return Text(days[value.toInt().clamp(0, 6)]);
-                
-                                  case 1: // Monthly
-                                    const months = [
-                                      'Jan',
-                                      'Feb',
-                                      'Mar',
-                                      'Apr',
-                                      'May',
-                                      'Jun',
-                                      'Jul',
-                                      'Aug',
-                                      'Sep',
-                                      'Oct',
-                                      'Nov',
-                                      'Dec'
-                                    ];
-                                    return Text(months[(DateTime.now().month -
-                                            6 +
-                                            value.toInt()) %
-                                        12]);
-                                  case 2: // Yearly
-                                    final currentYear = DateTime.now().year;
+                                  case 0:
                                     return Text(
-                                        '${currentYear - 4 + value.toInt()}');
+                                      [
+                                        'Sun',
+                                        'Mon',
+                                        'Tue',
+                                        'Wed',
+                                        'Thu',
+                                        'Fri',
+                                        'Sat'
+                                      ][date.weekday % 7],
+                                    );
+                                  case 1:
+                                    return Text('${date.day}/${date.month}');
+                                  case 2:
+                                    return Text('${date.year}');
                                   default:
-                                    return Text('');
+                                    return const Text('');
                                 }
                               },
                             ),
@@ -383,42 +367,43 @@ void initState() {
 //   ).toList();
 // }
 
-List<BarChartGroupData> _buildBarGroups(Map<String, double> rawExpenses) {
-  final sortedEntries = rawExpenses.entries.toList()
-    ..sort((a, b) => a.key.compareTo(b.key)); // Sort by date string
+//
+  List<BarChartGroupData> _buildBarGroups(Map<String, double> rawExpenses) {
+    final sortedEntries = rawExpenses.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key)); // Sort by date string
 
-  return sortedEntries.asMap().entries.map((entry) {
-    final index = entry.key;
-    final amount = entry.value.value;
+    return sortedEntries.asMap().entries.map((entry) {
+      final index = entry.key;
+      final dateStr = entry.value.key;
+      final amount = entry.value.value;
 
-    return BarChartGroupData(
-      x: index,
-      barRods: [
-        BarChartRodData(
-          toY: amount,
-          color: const Color(0xff00d09e),
-          width: 16,
-        ),
-      ],
-    );
-  }).toList();
-}
+      return BarChartGroupData(
+        x: index,
+        barRods: [
+          BarChartRodData(
+            toY: amount,
+            color: const Color(0xff00d09e),
+            width: 16,
+          ),
+        ],
+      );
+    }).toList();
+  }
 
   // Update expenses dynamically based on the selected tab
   void _updateExpenses() {
-  final notifier = ref.read(dailyExpensesProvider.notifier);
+    final notifier = ref.read(dailyExpensesProvider.notifier);
 
-  switch (selectedTab) {
-    case 0:
-      notifier.fetchDailyExpenses("day");
-      break;
-    case 1:
-      notifier.fetchDailyExpenses("month");
-      break;
-    case 2:
-      notifier.fetchDailyExpenses("year");
-      break;
+    switch (selectedTab) {
+      case 0:
+        notifier.fetchDailyExpenses("day");
+        break;
+      case 1:
+        notifier.fetchDailyExpenses("month");
+        break;
+      case 2:
+        notifier.fetchDailyExpenses("year");
+        break;
+    }
   }
-}
-
 }

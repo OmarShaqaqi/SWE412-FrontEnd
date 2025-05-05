@@ -34,6 +34,7 @@ class DateTypeExpensesNotifier extends StateNotifier<Map<String, double>> {
             MapEntry(key, (value as num).toDouble()));
 
         state = parsed;
+        print('Daily expenses fetched successfully: $parsed');
       } else {
         print('Failed to fetch daily expenses: ${response.statusCode}');
       }

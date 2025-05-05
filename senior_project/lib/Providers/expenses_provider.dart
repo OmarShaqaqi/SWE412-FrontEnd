@@ -32,6 +32,7 @@ class ExpensesProvider extends StateNotifier<List<Expense>> {
         final List<Expense> expenses = data.map((json) => Expense.fromJson(json)).toList();
 
         state = expenses; // Update state with fetched expenses
+        print(expenses); // Debugging line to check fetched expenses
       } else {
         print('Failed to fetch expenses. Status code: ${response.statusCode}');
       }
