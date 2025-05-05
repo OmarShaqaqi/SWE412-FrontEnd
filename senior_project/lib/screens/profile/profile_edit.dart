@@ -162,27 +162,66 @@ class _ProfileEditState extends ConsumerState<ProfileEditScreen> {
   Widget build(BuildContext context) {
     final token = ref.watch(tokenProvider); // ✅ Watch token from Riverpod
     Widget profileImage = 
-    Stack(
-      alignment: Alignment.bottomRight,
-      children: [
-        CircleAvatar(
-          radius: 50,
-          backgroundImage: _imageFile != null
-              ? FileImage(_imageFile!)
-              : const AssetImage('assets/anonymous_profile.png')
-                  as ImageProvider,
-          backgroundColor: Colors.white,
-        ),
-        GestureDetector(
-          onTap: _pickImage,
-          child: const CircleAvatar(
-            radius: 16,
+Stack(
+  alignment: Alignment.bottomRight,
+  children: [
+    Consumer(
+      builder: (context, ref, _) {
+        final imageAsync = ref.watch(profileImageProvider);
+        print("Image Async: $imageAsync");
+
+        return imageAsync.when(
+          data: (data) {
+            return CircleAvatar(
+              radius: 50,
+              backgroundImage: data != null
+                  ? MemoryImage(data)
+                  : const AssetImage('assets/anonymous_profile.png') as ImageProvider,
+              backgroundColor: Colors.white,
+            );
+          },
+          loading: () => const CircleAvatar(
+              radius: 50, child: CircularProgressIndicator()),
+          error: (_, __) => const CircleAvatar(
+            radius: 50,
+            backgroundImage: AssetImage('assets/anonymous_profile.png'),
             backgroundColor: Colors.white,
-            child: Icon(Icons.edit, size: 18, color: Colors.black),
           ),
-        ),
-      ],
-    );
+        );
+      },
+    ),
+    GestureDetector(
+      onTap: _pickImage,
+      child: const CircleAvatar(
+        radius: 16,
+        backgroundColor: Colors.white,
+        child: Icon(Icons.edit, size: 18, color: Colors.black),
+      ),
+    ),
+  ],
+)
+;
+    // Stack(
+    //   alignment: Alignment.bottomRight,
+    //   children: [
+    //     CircleAvatar(
+    //       radius: 50,
+    //       backgroundImage: _imageFile != null
+    //           ? FileImage(_imageFile!)
+    //           : const AssetImage('assets/anonymous_profile.png')
+    //               as ImageProvider,
+    //       backgroundColor: Colors.white,
+    //     ),
+    //     GestureDetector(
+    //       onTap: _pickImage,
+    //       child: const CircleAvatar(
+    //         radius: 16,
+    //         backgroundColor: Colors.white,
+    //         child: Icon(Icons.edit, size: 18, color: Colors.black),
+    //       ),
+    //     ),
+    //   ],
+    // );
 
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
