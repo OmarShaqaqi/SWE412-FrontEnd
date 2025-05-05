@@ -43,7 +43,7 @@ class GroupsScreen extends ConsumerWidget {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: Colors.green,
+                          color:Color.fromARGB(255, 121, 205, 173),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Icon(
@@ -58,7 +58,6 @@ class GroupsScreen extends ConsumerWidget {
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -86,19 +85,29 @@ class GroupsScreen extends ConsumerWidget {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: Colors.blue,
+                          color: Color.fromARGB(255, 109, 182, 254),
                           borderRadius: BorderRadius.circular(20),
+
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,                         
                           children: [
                             Icon(groupIconFromString(groups[index].iconName)?.iconData ?? Icons.wallet, size: 40, color: Colors.white),
-                            Text(groups[index].name,style: TextStyle(color: Colors.white),),
+                            // Text(groups[index].name,style: TextStyle(color: Colors.white),),
                           ],
                         ),
+                        
                       ),
+                      const SizedBox(height: 4),
+                      Text(groups[index].name,style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                  ),
+                      
                     ],
                   ),
+                  
                 );
               }
             },

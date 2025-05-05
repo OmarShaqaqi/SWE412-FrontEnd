@@ -86,7 +86,7 @@ class _CategoriesListState extends ConsumerState<CategoriesList> {
                                   width: 80,
                                   height: 80,
                                   decoration: BoxDecoration(
-                                    color: Colors.blue,
+                                    color: Color.fromARGB(255, 109, 182, 254),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Icon(categoryIconFromString(categoriesState[index].iconName).icon, size: 40, color: Colors.white),
@@ -125,7 +125,7 @@ class _CategoriesListState extends ConsumerState<CategoriesList> {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: Colors.green,
+              color: Color.fromARGB(255, 121, 205, 173),
               borderRadius: BorderRadius.circular(20),
             ),
             child: const Icon(

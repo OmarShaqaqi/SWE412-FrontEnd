@@ -260,18 +260,7 @@ class _AnalysisPageState extends ConsumerState<AnalysisPage> {
                         ),
                       ),
                       Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.search),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const SearchPage(),
-                                ),
-                              );
-                            },
-                          ),
+                        children: [                          
                           IconButton(
                             icon: const Icon(Icons.calendar_today),
                             onPressed: () {
