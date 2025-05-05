@@ -31,6 +31,7 @@ class ParticipantsNotifier extends StateNotifier<List<Participant>> {
         final List<dynamic> data = json.decode(response.body);
         final List<Participant> participants= data.map((json) => Participant.fromJson(json)).toList();
           state = participants;
+        
 
       } else {
         print('Failed to load participants: ${response.statusCode}');

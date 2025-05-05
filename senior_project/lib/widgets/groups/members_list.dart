@@ -249,6 +249,7 @@ class _MembersListState extends ConsumerState<MembersList> {
                           (participant['totalExpense'] as num?)?.toDouble() ??
                               0.0,
                       isLeader: participant['isLeader'] ?? false,
+                      image: participant['image'] ?? null, // Nullable field
                     ),
                   );
                 },

@@ -108,6 +108,8 @@
 //   }
 // }
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:senior_project/widgets/price_widget.dart';
 
@@ -115,12 +117,14 @@ class ParticipantRow extends StatelessWidget {
   final String phone;
   final double totalExpense;
   final bool isLeader;
+  final image; // Nullable field for image
 
   const ParticipantRow({
     Key? key,
     required this.phone,
     required this.totalExpense,
     required this.isLeader,
+    this.image, // Nullable field for image
   }) : super(key: key);
 
   @override
@@ -140,11 +144,20 @@ class ParticipantRow extends StatelessWidget {
                   color: isLeader ? Colors.orange : Colors.blue, // Leader is orange
                   borderRadius: BorderRadius.circular(25),
                 ),
-                child: const Icon(
-                  Icons.person,
-                  color: Colors.white,
-                  size: 30,
-                ),
+                child: image != null
+                    ? ClipOval(
+                        child: Image.memory(
+                           base64Decode(image),
+                          fit: BoxFit.cover,
+                          width: 50,
+                          height: 50,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 30,
+                      ),
               ),
               const SizedBox(width: 10),
 

@@ -20,8 +20,7 @@ final profileImageProvider = FutureProvider<Uint8List?>((ref) async {
     final  data = json.decode(response.body);
     print(json.decode(response.body));
     final base65Image = base64Decode(data["image"]); 
-    print("Parsed Profile Image: ${data}");
-    print("Profile Image Response: ${response.body}");
+
 
     return base65Image; // image as Uint8List
   } else {
