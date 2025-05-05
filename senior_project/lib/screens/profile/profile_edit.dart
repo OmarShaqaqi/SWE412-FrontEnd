@@ -293,8 +293,13 @@ Stack(
                       ),
                     ),
                     onPressed: updateUserProfile, // ✅ Trigger profile update
-                    child: const Text("Update Profile"),
-                  )
+                    child: const Text("Update Profile",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),),
+                  
+                  ),
                 ],
               ),
             ],

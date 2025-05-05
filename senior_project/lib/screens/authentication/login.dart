@@ -78,6 +78,7 @@ class LoginScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 5),
               TextFormField(
+                keyboardType: TextInputType.phone,
                 controller: usernameLoginController,
                 decoration: const InputDecoration(
                   hintText: "05xxxxxxxx",

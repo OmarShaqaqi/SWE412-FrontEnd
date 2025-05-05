@@ -48,7 +48,7 @@ class ExpenseRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Participant",
+                  expense.actor,
                   style: TextStyle(fontSize: textSize, fontWeight: FontWeight.bold),
                 ),
                 // Text(

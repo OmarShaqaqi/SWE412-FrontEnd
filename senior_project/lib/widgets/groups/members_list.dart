@@ -196,6 +196,7 @@ class _MembersListState extends ConsumerState<MembersList> {
                   (participants.first['totalExpense'] as num?)?.toDouble() ??
                       0.0,
               isLeader: participants.first['isLeader'] ?? false,
+              image: participants.first['image'] ?? null, // Nullable field
             ),
             const SizedBox(height: 8),
             Row(
