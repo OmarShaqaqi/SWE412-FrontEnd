@@ -191,7 +191,7 @@ class _MembersListState extends ConsumerState<MembersList> {
           else ...[
             // Display Leader
             ParticipantRow(
-              phone: participants.first['phone'] ?? 'Unknown',
+              phone: participants.first['username'] ?? 'Unknown',
               totalExpense:
                   (participants.first['totalExpense'] as num?)?.toDouble() ??
                       0.0,
@@ -245,7 +245,7 @@ class _MembersListState extends ConsumerState<MembersList> {
                       }
                     },
                     child: ParticipantRow(
-                      phone: participant['phone'] ?? 'Unknown',
+                      phone: participant['username'] ?? 'Unknown',
                       totalExpense:
                           (participant['totalExpense'] as num?)?.toDouble() ??
                               0.0,

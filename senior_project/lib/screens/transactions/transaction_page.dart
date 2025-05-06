@@ -32,9 +32,12 @@ class _TransactionPageState extends ConsumerState<TransactionPage> {
 
   Future<void> _initializeExpenses() async {
     final expenses = await _fetchExpensesByDate(DateTime.now().toString());
-    setState(() {
-      allExpense = expenses;
-    });
+    if (mounted) {
+      setState(() {
+        allExpense = expenses;
+      });
+    }
+    
   }
   // groups/personal
 

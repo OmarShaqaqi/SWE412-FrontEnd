@@ -130,7 +130,20 @@ class _ForgotPasswordStateScreen extends State<ForgotPasswordScreen> {
             ],
           );
 
-          return CustomScaffold(title: "Forgot Password", content: content);
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: const Color.fromARGB(255, 0, 208, 158),
+              title: const Text(
+                "Forgot Password",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 9, 48, 48),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                ),
+              ),
+            ), 
+            
+            body: content);
     
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senior_project/Providers/groups_provider.dart';
 import 'package:senior_project/Providers/token_provider.dart';
+import 'package:senior_project/Providers/user_provider.dart';
 import 'package:senior_project/Providers/users_provider.dart';
 import 'package:senior_project/config.dart';
 import 'package:senior_project/models/expense_model.dart';
@@ -53,6 +54,7 @@ Future<void> showLogoutDialog(BuildContext context, dynamic ref) {
                     ref
                         .read(tokenProvider.notifier)
                         .removeToken(); // Remove the token from the provider
+                    // Remove the user from the provider
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => LoginScreen()),

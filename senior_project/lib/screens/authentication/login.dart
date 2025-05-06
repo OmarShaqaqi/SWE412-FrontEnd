@@ -8,7 +8,7 @@ import 'package:senior_project/templates/custom_body.dart';
 import 'package:senior_project/Providers/token_provider.dart';
 import '../../templates/custom_appbar.dart';
 import "signup.dart";
-import "forgot_password.dart";
+import '../profile/forgot_password.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../config.dart';
@@ -17,9 +17,9 @@ class LoginScreen extends ConsumerWidget {
   final TextEditingController usernameLoginController = TextEditingController();
   final TextEditingController passwordLoginController = TextEditingController();
 
-
   Future<void> handleSignin(BuildContext context, WidgetRef ref) async {
-    if (usernameLoginController.text.isNotEmpty && passwordLoginController.text.isNotEmpty) {
+    if (usernameLoginController.text.isNotEmpty &&
+        passwordLoginController.text.isNotEmpty) {
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
         headers: {"Content-Type": "application/json"},
@@ -35,7 +35,7 @@ class LoginScreen extends ConsumerWidget {
 
         // ✅ Save token using Riverpod
         ref.read(tokenProvider.notifier).saveToken(token);
-
+        // ref.refresh(tokenProvider);
         print("Login successful, token stored: $token");
 
         // Navigate to ProfileScreen with token
@@ -68,13 +68,15 @@ class LoginScreen extends ConsumerWidget {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [   
-              const SizedBox(height: 5),               
+            children: [
+              const SizedBox(height: 5),
               const Text(
                 "Phone Number",
-                style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
                 textAlign: TextAlign.left,
-                
               ),
               const SizedBox(height: 5),
               TextFormField(
@@ -85,27 +87,33 @@ class LoginScreen extends ConsumerWidget {
                   filled: true,
                   fillColor: Color.fromARGB(255, 223, 247, 226),
                   border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(
-                              255, 223, 247, 226), // match fill color
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(
-                              255, 223, 247, 226), // match fill color
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
+                    borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(
+                          255, 223, 247, 226), // match fill color
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(
+                          255, 223, 247, 226), // match fill color
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
-              const Text("Password",style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),
+              const Text(
+                "Password",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 5),
               TextFormField(
                 controller: passwordLoginController,
@@ -115,23 +123,23 @@ class LoginScreen extends ConsumerWidget {
                   filled: true,
                   fillColor: Color.fromARGB(255, 223, 247, 226),
                   border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(
-                              255, 223, 247, 226), // match fill color
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(
-                              255, 223, 247, 226), // match fill color
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
+                    borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(
+                          255, 223, 247, 226), // match fill color
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(
+                          255, 223, 247, 226), // match fill color
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -139,17 +147,22 @@ class LoginScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     ElevatedButton(
-                      onPressed: () => handleSignin(context, ref), // ✅ Call function
+                      onPressed: () =>
+                          handleSignin(context, ref), // ✅ Call function
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 0, 208, 158),
-                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 80),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 80),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                       ),
                       child: const Text(
                         "Login",
-                        style: TextStyle(color: Color.fromARGB(255, 9, 48, 48), fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 9, 48, 48),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -157,7 +170,9 @@ class LoginScreen extends ConsumerWidget {
                       onTap: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const ForgotPasswordScreen()),
                         );
                       },
                       child: const Text(
@@ -186,24 +201,30 @@ class LoginScreen extends ConsumerWidget {
                                 //   MaterialPageRoute(builder: (context) => SignupScreen()),
                                 // );
                                 Navigator.pushReplacement(
-                                context,
-                                PageRouteBuilder(
-                                  transitionDuration: const Duration(milliseconds: 400),
-                                  pageBuilder: (context, animation, secondaryAnimation) => SignupScreen(),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    final offsetAnimation = Tween<Offset>(
-                                      begin: const Offset(1.0, 0.0), // Start from right
-                                      end: Offset.zero,
-                                    ).chain(CurveTween(curve: Curves.easeInOut));
+                                  context,
+                                  PageRouteBuilder(
+                                    transitionDuration:
+                                        const Duration(milliseconds: 400),
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
+                                        SignupScreen(),
+                                    transitionsBuilder: (context, animation,
+                                        secondaryAnimation, child) {
+                                      final offsetAnimation = Tween<Offset>(
+                                        begin: const Offset(
+                                            1.0, 0.0), // Start from right
+                                        end: Offset.zero,
+                                      ).chain(
+                                          CurveTween(curve: Curves.easeInOut));
 
-                                    return SlideTransition(
-                                      position: animation.drive(offsetAnimation),
-                                      child: child,
-                                    );
-                                  },
-                                ),
-                              );
-
+                                      return SlideTransition(
+                                        position:
+                                            animation.drive(offsetAnimation),
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
                               },
                             text: ' Sign Up',
                             style: const TextStyle(color: Colors.blue),

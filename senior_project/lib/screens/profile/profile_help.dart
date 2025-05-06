@@ -71,9 +71,13 @@ class _ProfileHelpScreen extends State<ProfileHelpScreen>
                       child: Center(child: Text("Contact Us")),
                     ),
                   ),
+                  
                 ],
                 indicatorColor: const Color.fromARGB(255, 0, 208, 158),
               ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             Expanded(
               child: TabBarView(

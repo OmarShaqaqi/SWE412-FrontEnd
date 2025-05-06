@@ -148,11 +148,11 @@ class _SignupScreenState extends State<SignupScreen> {
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
         "phone": mobileController.text,
-        "email": emailController.text,
+        "email": "zxasfdfa@gmail.com",
         "password": passwordController.text,
         "username": userNameController.text,
-        "fname": firstNameController.text,
-        "lname": lastNameController.text,
+        "fname": "defult",
+        "lname": "defult",
         "budget": budgetController.text,
       }),
     );
@@ -228,131 +228,131 @@ class _SignupScreenState extends State<SignupScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    "First Name",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 5),
-                  TextFormField(
-                    controller: firstNameController, // Attach controller
-                    decoration: const InputDecoration(
-                      hintText: "First name",
-                      filled: true,
-                      fillColor: Color.fromARGB(255, 223, 247, 226),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(
-                              255, 223, 247, 226), // match fill color
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(
-                              255, 223, 247, 226), // match fill color
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter your first name";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    "Last Name",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 5),
-                  TextFormField(
-                    controller: lastNameController,
-                    decoration: const InputDecoration(
-                      hintText: "Last name",
-                      filled: true,
-                      fillColor: Color.fromARGB(255, 223, 247, 226),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(
-                              255, 223, 247, 226), // match fill color
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(
-                              255, 223, 247, 226), // match fill color
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter your last name";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    "Email",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 5),
-                  TextFormField(
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                      hintText: "example@example.com",
-                      filled: true,
-                      fillColor: Color.fromARGB(255, 223, 247, 226),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(
-                              255, 223, 247, 226), // match fill color
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(
-                              255, 223, 247, 226), // match fill color
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter your email";
-                      } else if (!value.contains("@")) {
-                        return "Please enter a valid email";
-                      }
-                      return null;
-                    },
-                  ),
+                  // const SizedBox(height: 20),
+                  // const Text(
+                  //   "First Name",
+                  //   style: TextStyle(
+                  //       color: Colors.black,
+                  //       fontSize: 16,
+                  //       fontWeight: FontWeight.bold),
+                  // ),
+                  // const SizedBox(height: 5),
+                  // TextFormField(
+                  //   controller: firstNameController, // Attach controller
+                  //   decoration: const InputDecoration(
+                  //     hintText: "First name",
+                  //     filled: true,
+                  //     fillColor: Color.fromARGB(255, 223, 247, 226),
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  //     ),
+                  //     enabledBorder: OutlineInputBorder(
+                  //       borderSide: BorderSide(
+                  //         color: Color.fromARGB(
+                  //             255, 223, 247, 226), // match fill color
+                  //       ),
+                  //       borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  //     ),
+                  //     focusedBorder: OutlineInputBorder(
+                  //       borderSide: BorderSide(
+                  //         color: Color.fromARGB(
+                  //             255, 223, 247, 226), // match fill color
+                  //         width: 2.0,
+                  //       ),
+                  //       borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  //     ),
+                  //   ),
+                  //   validator: (value) {
+                  //     if (value == null || value.isEmpty) {
+                  //       return "Please enter your first name";
+                  //     }
+                  //     return null;
+                  //   },
+                  // ),
+                  // const SizedBox(height: 20),
+                  // const Text(
+                  //   "Last Name",
+                  //   style: TextStyle(
+                  //       color: Colors.black,
+                  //       fontSize: 16,
+                  //       fontWeight: FontWeight.bold),
+                  // ),
+                  // const SizedBox(height: 5),
+                  // TextFormField(
+                  //   controller: lastNameController,
+                  //   decoration: const InputDecoration(
+                  //     hintText: "Last name",
+                  //     filled: true,
+                  //     fillColor: Color.fromARGB(255, 223, 247, 226),
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  //     ),
+                  //     enabledBorder: OutlineInputBorder(
+                  //       borderSide: BorderSide(
+                  //         color: Color.fromARGB(
+                  //             255, 223, 247, 226), // match fill color
+                  //       ),
+                  //       borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  //     ),
+                  //     focusedBorder: OutlineInputBorder(
+                  //       borderSide: BorderSide(
+                  //         color: Color.fromARGB(
+                  //             255, 223, 247, 226), // match fill color
+                  //         width: 2.0,
+                  //       ),
+                  //       borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  //     ),
+                  //   ),
+                  //   validator: (value) {
+                  //     if (value == null || value.isEmpty) {
+                  //       return "Please enter your last name";
+                  //     }
+                  //     return null;
+                  //   },
+                  // ),
+                  // const SizedBox(height: 20),
+                  // const Text(
+                  //   "Email",
+                  //   style: TextStyle(
+                  //       color: Colors.black,
+                  //       fontSize: 16,
+                  //       fontWeight: FontWeight.bold),
+                  // ),
+                  // const SizedBox(height: 5),
+                  // TextFormField(
+                  //   controller: emailController,
+                  //   decoration: const InputDecoration(
+                  //     hintText: "example@example.com",
+                  //     filled: true,
+                  //     fillColor: Color.fromARGB(255, 223, 247, 226),
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  //     ),
+                  //     enabledBorder: OutlineInputBorder(
+                  //       borderSide: BorderSide(
+                  //         color: Color.fromARGB(
+                  //             255, 223, 247, 226), // match fill color
+                  //       ),
+                  //       borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  //     ),
+                  //     focusedBorder: OutlineInputBorder(
+                  //       borderSide: BorderSide(
+                  //         color: Color.fromARGB(
+                  //             255, 223, 247, 226), // match fill color
+                  //         width: 2.0,
+                  //       ),
+                  //       borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                  //     ),
+                  //   ),
+                  //   validator: (value) {
+                  //     if (value == null || value.isEmpty) {
+                  //       return "Please enter your email";
+                  //     } else if (!value.contains("@")) {
+                  //       return "Please enter a valid email";
+                  //     }
+                  //     return null;
+                  //   },
+                  // ),
                   const SizedBox(height: 20),
                   const Text(
                     "Mobile Number",
@@ -596,7 +596,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             ],
                           ),
                         ),
-                        SizedBox(height: 50),
+                        SizedBox(height: 100),
                       ],
                     ),
                   ),

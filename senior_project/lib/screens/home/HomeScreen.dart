@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:senior_project/Providers/todayExpense_provider.dart';
+import 'package:senior_project/Providers/user_provider.dart';
 import 'package:senior_project/models/expense_model.dart';
 import 'package:senior_project/screens/home/NewExpense.dart';
 import 'package:senior_project/screens/home/groupExpense.dart';

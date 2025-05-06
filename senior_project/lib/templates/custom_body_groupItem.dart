@@ -49,9 +49,12 @@ class _CustomBodyGroupState extends ConsumerState<CustomBodyGroupItem> {
       }
     } catch (e) {
       print('Error: $e');
-      setState(() {
-        isLoading = false;
-      });
+      if (!mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    
     }
   }
 
